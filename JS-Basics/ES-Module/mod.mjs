@@ -1,0 +1,1 @@
+export default function log() { console.log('I log from an es module')}

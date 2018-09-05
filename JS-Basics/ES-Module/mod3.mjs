@@ -1,0 +1,1 @@
+export function log() { console.log('I log from an last es module')}

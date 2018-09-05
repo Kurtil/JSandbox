@@ -1,0 +1,1 @@
+export function log2() { console.log('I log from another es module')}
