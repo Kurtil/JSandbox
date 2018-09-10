@@ -6,6 +6,10 @@ class Logger {
     log() {
         console.log(this.loggingStrategy.log());
     }
+
+    setStrategy(strategy) {
+        this.loggingStrategy = strategy;
+    }
 }
 
 module.exports = Logger;

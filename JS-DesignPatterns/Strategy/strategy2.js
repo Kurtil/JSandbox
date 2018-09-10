@@ -8,4 +8,4 @@ class Strategy2 {
     }
 }
 
-module.exports = Strategy2
+module.exports = Strategy2;
