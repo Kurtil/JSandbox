@@ -4,11 +4,11 @@ module.exports = class Coffee {
         this.price = price
     }
 
-    getPrice() {
-        return this.price
-    }
-
     getDescription() {
         return this.description
+    }
+
+    getPrice() {
+        return this.price
     }
 }
