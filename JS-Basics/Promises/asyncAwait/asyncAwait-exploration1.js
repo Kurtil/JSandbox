@@ -1,13 +1,14 @@
 const ob = {
     log(arg) {
-        return new Promise((resolve) => resolve(console.log(`${arg} promise done!`)));
+        return new Promise((resolve) => setTimeout(() => resolve(`${arg} promise done!`), 1000));
     }
 }; // Note that this semicolon is mandatory !!!
 
 // call with async/await
 (async () => {
     console.log('--- Before async call in async function ---');
-    await ob.log('first promise call');
+    const message = await ob.log('first promise call');
+    console.log(message + ' in async function')
     console.log('--- After async call in async function ---');
 })();
 
@@ -21,5 +22,5 @@ const ob = {
 
 // call without async/await
 console.log('--- Before async call ---');
-ob.log('last promise call');
+ob.log('last promise call').then(console.log);
 console.log('--- After async call ---');
