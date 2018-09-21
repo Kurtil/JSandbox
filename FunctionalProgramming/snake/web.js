@@ -42,6 +42,14 @@ const step = t1 => t2 => {
 }
 
 // need to add event listener for user input
+window.addEventListener('keydown', e => {
+    switch(e.key) {
+        case('q') : case('ArrowLeft') : state = enqueue(state, WEST); break;
+        case('z') : case('ArrowUp') : state = enqueue(state, NORTH); break;
+        case('d') : case('ArrowRight') : state = enqueue(state, EAST); break;
+        case('s') : case('ArrowDown') : state = enqueue(state, SOUTH); break;
+    }
+})
 
 // main
 state.snake.push(...[{ x: 1, y: 1 }, { x: 2, y: 1 }])

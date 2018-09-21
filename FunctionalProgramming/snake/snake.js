@@ -14,6 +14,7 @@ const initialState = () => ({
 const nextApple = state => willEat(state) ? rdmPos(state) : state.apple;
 const willEat = state => pointEq(state.apple)(nextHead(state));
 const willCrash = state => state.snake.find(pointEq(nextHead(state))); // here we can see the power of currying
+const validMove = move => state => move.x + state.moves[0].x !== 0 || move.y + state.moves[0].y
 const nextMoves = state => state.moves.length > 1 ? dropFirst(state.moves) : state.moves
 const nextHead = state => state.snake.length === 0 ?
     { x: 2, y: 2 } :
@@ -32,7 +33,11 @@ const nextSnake = snake =>
 const rdmPos = state => ({
     x: rdm(0)(state.cols - 1),
     y: rdm(0)(state.rows - 1)
-})
+});
+
+const enqueue = (state, move) => validMove(move)(state) ?
+    merge(state)({moves : state.moves.concat([move])}) :
+    state;
 
 const next = spec({
     cols: prop('cols'),
@@ -40,4 +45,4 @@ const next = spec({
     moves: nextMoves,
     snake: nextSnake,
     apple: nextApple,
-})
+});

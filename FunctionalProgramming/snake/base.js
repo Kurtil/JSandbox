@@ -5,6 +5,7 @@ const dropFirst = ([,...arr]) => arr;
 const rdm       = min => max => Math.floor(Math.random() * max) + min;
 const mod       = x => y => ((y % x) + x) % x;
 const prop      = k => o => o[k];
+const merge     = ob1 => ob2 => Object.assign({}, ob1, ob2);
 const objOf     = k => v => {let o = {}; o[k] = v; return o};
 const spec      = o => x => Object.keys(o).map(k => objOf(k)(o[k](x)))
     .reduce((acc, o) => Object.assign(acc, o));
