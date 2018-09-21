@@ -28,13 +28,23 @@ const draw = () => {
     }
 }
 
+// we want the game to have an aspect laggy
 const step = t1 => t2 => {
-    draw();
-    window.requestAnimationFrame(step(t2));
+    if (t2 - t1 > 100) {
+        state = next(state);
+        // imitate mouvement
+        // state.snake = [...state.snake.map(p => ({ x: ++p.x, y: p.y }))]
+        draw();
+        window.requestAnimationFrame(step(t2));
+    } else {
+        window.requestAnimationFrame(step(t1));
+    }
 }
+
+// need to add event listener for user input
 
 // main
 state.snake.push(...[{ x: 1, y: 1 }, { x: 2, y: 1 }])
 draw();
-window.requestAnimationFrame(step(0))
+window.requestAnimationFrame(step(0));
 
