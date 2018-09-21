@@ -5,6 +5,13 @@
     "version": "0.2.0",
     "configurations": [
         {
+            "type": "chrome",
+            "request": "launch",
+            "name": "Launch Snake Game",
+            "url": "file:///${workspaceFolder}/FunctionalProgramming/snake/web.html",
+            // "webRoot": "${workspaceFolder}/FunctionalProgramming/snake/web.html",
+        },
+        {
             "type": "node",
             "request": "launch",
             "name": "Launch Program",
