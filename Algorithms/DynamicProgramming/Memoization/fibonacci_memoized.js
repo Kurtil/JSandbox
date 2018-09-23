@@ -1,6 +1,8 @@
 // In this exercice, we will resolve fibonacci problem (give the corresponding value ...)
 // with memoization approach
 
+const N = 10; // play with the N to see the power of memoization !
+
 // let resovle the problème by recursion first to see the benefits of memoization later
 
 /**
@@ -18,7 +20,7 @@ const fib = n => {
 }
 
 console.log('--- basic recursion ---');
-console.log(fib(5));
+console.log(fib(N));
 console.log(`The recursive algorithm take ${counter} steps to resolve the problem`);
 
 // Now let's rewrite the code with memoization
@@ -28,39 +30,24 @@ console.log(`The recursive algorithm take ${counter} steps to resolve the proble
  * Use memoization to increase performance
  */
 let memoizationCounter = 0;
-const memo = new Map();
-// add base cases to Map. (This will remove to calls to the fibMemo function)
-memo.set(1, 1);
-memo.set(2, 1);
 
-const fibMemo = n => {
+const fibMemo = (n, memo) => {
     memoizationCounter++;
+    if (memo.get(n)) {
+        return memo.get(n);
+    }
+    let result;
     if (n === 1 || n === 2) {
-        return 1;
+        result = 1;
     }
     else {
-        const fibMinus1 = getAndHandleStorage(n - 1);
-        const fibMinus2 = getAndHandleStorage(n - 2);
-
-        return fibMinus1 + fibMinus2;
+        result = fibMemo(n - 1, memo) + fibMemo(n - 2, memo);
     }
-}
-
-/**
- * return the fib equivalent to x, get from memo if already store,
- * or compute, save the result and return it
- */
-const getAndHandleStorage = x => {
-    let fibMinus;
-    if (memo.get(x)) {
-        fibMinus = memo.get(x)
-    } else {
-        fibMinus = fibMemo(x);
-        memo.set(x, fibMinus)
-    }
-    return fibMinus;
+    memo.set(n, result);
+    return result;
 }
 
 console.log('--- memoization ---');
-console.log(fibMemo(5));
+const memo = new Map();
+console.log(fibMemo(N, memo));
 console.log(`The memo algorithm take ${memoizationCounter} steps to resolve the problem`);
