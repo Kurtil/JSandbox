@@ -14,3 +14,9 @@ ob[Symbol.iterator] = function*(){
 for (const val of ob) {
     monoLog(val);
 }
+
+const iterator = ob[Symbol.iterator]();
+monoLog(iterator.next());
+monoLog(iterator.next());
+monoLog(iterator.next());
+monoLog(iterator.next());
