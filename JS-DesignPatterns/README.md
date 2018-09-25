@@ -19,3 +19,4 @@ modelled for javascirpt.
 - Iterator : a same interface for iterating over collections. Encapsulate the collection itself. The collection does not have to expose the concrete structure. Allow to create infinite collections because the evaluation is lazy. One element at a time.
 - Command : encapsulate the commands. Command can be shared by many invoker and can be unexecuted (undo).
 - NullObject : null is something. Replace null by something we know that is an absence of behaviour (an null object).
+- Template method : provide an template of a methode where the algorithm will not vary between instanciation, and the part that will vary will be filled by delegating to other 'functions' 'given' to instances.
