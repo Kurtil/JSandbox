@@ -13,6 +13,7 @@ modelled for javascirpt.
 - Facade : reduce coupling by proposing a simple/single interface to a complex system. The client does not have to know the complexity of the system. He just know the facade.
 - Bridge : reduce class explosion by decoupling abstraction from its implementation so that the two can vary independently. Exemple : different view of different media types.
 - Adapter : allow client to use an object as if it was of the correct interface. No intent to change behaviour. The original behaviour is needed but the interface need to be adapted to be used correctly.
+- Composite : lets clients treat individual objects and compositions of objects uniformly.
 ## Behavioural patterns
 - Strategy : composition over inheritance. "Has a"  instead of "Is a". Dependency injection. Exemple : injecting a sorting strategy in a collection.
 - Observer : an observable have a list of observer, and will inform all observer when needed. Potential observer can subscribe or unsubscribe to the observable.
