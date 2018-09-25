@@ -1,6 +1,6 @@
 const animalFactory = require('./animalFactory');
 
-// The logic of creaztion is not part of this file ;)
+// The logic of creation is not part of this file ;)
 const animal1 = animalFactory.createAnimal();
 animal1.makeNoise();
 
