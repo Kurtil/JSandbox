@@ -1,0 +1,84 @@
+html {
+    height: 100%;
+    box-sizing: border-box;
+}
+
+body {
+    margin: 0;
+    min-height: 100%
+}
+
+.pageTitle {
+    background-color: darkblue;
+    color: white;
+    padding: 0.5em;
+    font-size: 200%;
+    font-weight: bold;
+    grid-area: title;
+}
+
+.sideBar {
+    background-color: antiquewhite;
+    padding: 0.5em;
+    grid-area: navbar;
+}
+
+ul {
+    margin:0;
+}
+
+.header {
+    font-size: 120%;
+    padding: 0.2em;
+    background-color: rgb(233, 252, 215);
+    grid-area: header;
+}
+
+.mainContent {
+    padding: 1em;
+    grid-area: maincontent;
+}
+
+.image {
+    background-color: yellow;
+    height: 150px;
+    margin: 1em;
+    grid-area: image;
+}
+
+footer {
+    position: absolute;
+    right: 0;
+    bottom: 0;
+    left: 0;
+    text-align: center;
+    background-color: rgb(56, 56, 56);
+    color: white;
+    padding: 0.5em;
+    grid-area: footer;
+}
+
+@media screen and (min-width: 500px) {
+    body {
+        display: grid;
+        grid-template: 50px 30px 1fr 1fr 30px / 100px 1fr;
+        grid-template-areas:
+            "title title"
+            "navbar header"
+            "navbar maincontent"
+            "navbar image"
+            "footer footer"
+    }
+}
+
+@media screen and (min-width: 1000px) {
+    body {
+        display: grid;
+        grid-template: 80px 50px 1fr 50px / repeat(3, 1fr);
+        grid-template-areas:
+            "navbar title title"
+            "header maincontent maincontent"
+            "image maincontent maincontent"
+            "footer maincontent maincontent"
+    }
+}
