@@ -1,0 +1,29 @@
+body {
+    display: flex;
+    /*flex-direction: row-reverse;*/
+    flex-wrap: wrap;
+    margin: 0;
+}
+
+p {
+    margin: 0;
+    /*max-width: 200px;*/
+    flex: 1 200px;
+}
+
+.first {
+    background-color: lightblue;
+}
+
+.second {
+    background-color: lightgreen;
+    flex: 2 200px;
+}
+
+.third {
+    background-color: lightyellow;
+}
+
+.fourth {
+    background-color: lightpink;
+}

@@ -1,0 +1,21 @@
+p {
+    margin: 0;
+}
+
+.first {
+    background-color: lightblue;
+}
+
+.second {
+    background-color: lightgreen;
+}
+
+.third {
+    background-color: lightyellow;
+    display: inline-block;
+    max-width: 20rem;
+}
+
+.fourth {
+    background-color: lightpink;
+}
