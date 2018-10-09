@@ -21,3 +21,4 @@ modelled for javascirpt.
 - Command : encapsulate the commands. Command can be shared by many invoker and can be unexecuted (undo).
 - NullObject : null is something. Replace null by something we know that is an absence of behaviour (an null object).
 - Template method : provide an template of a methode where the algorithm will not vary between instanciation, and the part that will vary will be filled by delegating to other 'functions' 'given' to instances.
+- State : Allow an object to alter its behavior when its internal state changes. The object will appear to change its class. This is achieved by delegating context methods to state, and states can change context's state.
