@@ -21,6 +21,7 @@ body {
     background-color: antiquewhite;
     padding: 0.5em;
     grid-area: navbar;
+    min-height: 30px;
 }
 
 ul {
@@ -58,6 +59,42 @@ footer {
     grid-area: footer;
 }
 
+.navbar {
+    position: relative;
+}
+
+.nav-toggle {
+    position: absolute;
+    right: 15px;
+    cursor: pointer;
+    font-size: 150%;
+    font-weight: bold;
+    z-index: 1;
+}
+
+.main-nav li {
+    text-align: center;
+    margin: 15px auto;
+    list-style: none;
+}
+
+.nav-link {
+    text-decoration: none;
+}
+
+.main-nav {
+    position: absolute;
+    right: 15px;
+    top: 15px;
+    background-color: antiquewhite;
+    padding: 15px;
+    display: none;
+}
+
+.active {
+    display: block;
+}
+
 @media screen and (min-width: 500px) {
     body {
         display: grid;
@@ -68,6 +105,15 @@ footer {
             "navbar maincontent"
             "navbar image"
             "footer footer"
+    }
+
+    .nav-toggle {
+        display: none;
+    }
+
+    .main-nav {
+        display: block;
+        position: static;
     }
 }
 
@@ -80,5 +126,10 @@ footer {
             "header maincontent maincontent"
             "image maincontent maincontent"
             "footer maincontent maincontent"
+    }
+
+    .main-nav {
+        display: flex;
+        padding: 8px;
     }
 }
