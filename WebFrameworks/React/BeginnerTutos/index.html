@@ -1,0 +1,31 @@
+<!-- Following the tuto from eggHead.io https://egghead.io/lessons/react-replace-react-createelement-function-call-with-jsx -->
+
+<div id='root'></div>
+<script crossorigin src="https://unpkg.com/react@16/umd/react.development.js"></script>
+<script crossorigin src="https://unpkg.com/react-dom@16/umd/react-dom.development.js"></script>
+<script src="https://unpkg.com/babel-standalone@6.26.0/babel.js"></script>
+<script type="text/babel">
+const rootElement = document.getElementById('root');
+// const element = document.createElement('div');
+// element.textContent = 'Hello world';
+// element.className = 'container';
+// rootElement.appendChild(element);
+
+// const element = React.createElement(
+//     'div',
+//     {className: 'container'},
+//     'Hello world');
+// ReactDOM.render(element, rootElement);
+
+const children = "Hello World";
+const className = 'container';
+
+const props = {
+    children,
+    className
+};
+
+const element = <div {...props} />; // last prop win : <div className='defaultClass' {...props} />
+ReactDOM.render(element, rootElement);
+
+</script>
