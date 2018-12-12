@@ -1,0 +1,72 @@
+<!-- Following the tuto from eggHead.io https://egghead.io/lessons/react-replace-react-createelement-function-call-with-jsx -->
+<style>
+    #root {
+        display: flex;
+        height: 100%;
+        width: 10em;
+        margin: auto;
+        align-items: center;
+        justify-content: center;
+    }
+
+    .stopWatch {
+        height: 5em;
+        text-align: center;
+        display: flex;
+        flex-direction: column;
+        justify-content: space-around;
+    }
+</style>
+
+<div id='root'></div>
+<script crossorigin src="https://unpkg.com/react@16/umd/react.development.js"></script>
+<script crossorigin src="https://unpkg.com/react-dom@16/umd/react-dom.development.js"></script>
+<script src="https://unpkg.com/babel-standalone@6.26.0/babel.js"></script>
+<script type="text/babel">
+
+class StopWatch extends React.Component {
+    constructor() {
+        super();
+        this.state = {laps:0, running: false}
+    }
+    handleRunClick = () => {
+        this.setState(state => {
+            if (state.running) {
+                clearInterval(this.timer);
+            } else {
+                const statTime = Date.now() - this.state.laps;
+                this.timer = setInterval(() => {
+                    this.setState({laps: Date.now() - statTime});
+                });
+            }
+            return {running: !state.running};
+        });
+    }
+
+    // this will avoid memory leak when the component is unmount
+    componentWillUnmount = () => {
+      clearInterval(this.timer);
+    }
+
+    handleClearClick = () => {
+        clearInterval(this.timer);
+        this.setState({laps: 0, running: false});
+    }
+    render() {
+        const {laps, running} = this.state;
+        const style = {border: '1px solid black', padding: '1em'};
+        return (
+            <div className='stopWatch' style={style}>
+                <label>{laps}ms</label>
+                <button onClick={this.handleRunClick}>{running ? 'Stop' : 'Start'}</button>
+                <button onClick={this.handleClearClick}>Clear</button>
+            </div>
+        );
+    }
+}
+
+const element = <StopWatch />;
+
+ReactDOM.render(element, document.getElementById('root'));
+
+</script>

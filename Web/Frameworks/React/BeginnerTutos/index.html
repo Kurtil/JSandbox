@@ -8,12 +8,15 @@
 const rootElement = document.getElementById('root');
 
 // Babel need capitalized variable to bind it in JSX
-const Message = props => <div>{props.children}</div>
+/**
+ * @params the props object
+**/
+const Message = ({children}) => <div>{children != null ? children : 'No message'}</div>
 
 const element =
     <div>
         <Message children="coucou"/>
-        <Message>jeanjeanne</Message>
+        <Message></Message>
     </div>;
 ReactDOM.render(element, rootElement);
 
