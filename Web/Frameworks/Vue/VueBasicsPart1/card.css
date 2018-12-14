@@ -1,0 +1,104 @@
+.card {
+    border: solid gray 1px;
+    border-radius: 0.5em;
+    margin: 1em;
+    overflow: hidden;
+    max-width: 20em;
+}
+.card > * {
+    padding: 0.5rem 0.5rem 0 0.5rem;
+}
+
+.card > *:last-child {
+    padding: 0.5rem 0.5rem 0.5rem 0.5rem;
+}
+
+.card > header {
+    color: white;
+    font-size: 150%;
+    background-color: orange;
+    padding: 0.5rem 0.5rem 0.5rem 0.5rem;
+}
+
+.card > footer {
+    text-align: center;
+}
+
+.card ul {
+    margin: 0;
+    max-height: 12em;
+    overflow-y: auto;
+    border-radius: 0.5em;
+}
+
+.card ul li {
+    margin: 0.2em 0 0;
+    background-color: #dddddd;
+    list-style: none;
+    padding: 0.2em;
+    padding-left: 0.5em;
+}
+
+.card ul li:first-child {
+    margin: 0;
+}
+
+.card ul > li > button {
+    text-align: center;
+    font-family: Arial, sans-serif;
+    background-color: #fff;
+    border: none;
+    border-radius: 1em;
+    outline: none;
+}
+
+.card ul > li > button:hover {
+    background-color: rgb(255, 228, 197);
+}
+
+.card ul > li > button:active {
+    background-color: rgb(255, 167, 108);
+}
+
+.card ul > li > p {
+    color: gray;
+    font-size: 50%;
+    padding-left: 3em;
+    margin: 0;
+}
+
+.input {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 0.2em;
+}
+
+.input > * {
+    border: grey solid 1px;
+    flex: 1 0;
+    outline: none;
+    padding: 0.2em;
+}
+
+.input > input {
+    border-radius: 1em 0 0 1em;
+    padding-left: 0.8em;
+    border-right: none;
+}
+
+.input > button {
+    border-radius: 0 1em 1em 0;
+    border-left: none;
+}
+
+button {
+    cursor: pointer;
+}
+
+button:hover {
+    background-color: darkgray;
+}
+
+button:active {
+    background-color: rgb(126, 139, 126);
+}
