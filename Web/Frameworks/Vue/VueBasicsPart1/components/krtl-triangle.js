@@ -1,4 +1,4 @@
-Vue.component('krtl-triangle',
+Vue.component('KrtlTriangle',
 {
     template: `
         <div id="triangle">

@@ -1,4 +1,4 @@
-Vue.component('krtl-card',
+Vue.component('KrtlCard',
 {
     template: '#krtl-card',
     data() {
@@ -10,16 +10,14 @@ Vue.component('krtl-card',
                 { id: 3,text: 'stegosaurus' },
                 { id: 4,text: 'randomcolor' },
             ],
-            userInput: '',
             expanded: true,
         }
     },
     methods: {
-        addItem() {
+        addItem(dynoName) {
             // const input = document.getElementById('itemInput');
-            if (this.userInput !== '') {
-                this.items.push({ text: this.userInput });
-                this.userInput = '';
+            if (dynoName !== '') {
+                this.items.push({ text: dynoName });
             }
         },
         deleteItem(index) {
@@ -51,7 +49,7 @@ Vue.component('krtl-card',
     watch: {
         items(val) {
             if (val && val[val.length - 1] && val[val.length - 1].text === 'TRex') {
-                this.$event('TREXXX !');
+                this.$emit('TREXXX !');
                 alert('You have a TRex !!!');
             }
         }

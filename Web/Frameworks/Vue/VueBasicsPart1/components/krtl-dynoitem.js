@@ -1,18 +1,10 @@
-Vue.component('krtl-dynoitem',
+Vue.component('KrtlDynoitem',
 {
     props: {
-        text: String,
+        text: [String, Number],
         index: Number,
     },
     filters: {
-        capitalize(value) {
-            if (!value) return '';
-            return value.charAt(0).toUpperCase() + value.slice(1);
-        },
-        undercase(value) {
-            if (!value) return '';
-            return value.charAt(0).toLowerCase() + value.slice(1);
-        },
         url(value) {
             return `https://www.github.com/${value}`;
         }

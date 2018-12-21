@@ -21,30 +21,30 @@
         <div class='card'>
             <header :style="headerClassObject">{{title}}
                 <div class="expander" @click="expanded = !expanded"
-                    :class='{expanded: expanded}'><krtl-triangle></krtl-triangle></div>
+                    :class='{expanded: expanded}'><krtl-triangle /></div>
             </header>
             <template v-if='expanded'>
-                <form class="input" @submit.prevent="addItem">
-                    <input type="text" id="itemInput" v-model='userInput'>
-                    <button>Add dinosaurs</button>
-                </form>
+                <krtl-dynoinput @add-dyno="addItem($event)" :text="title"/>
                 <ul>
                     <li v-for='(dinosaur, index) of items'
                         is="krtl-dynoitem"
-                        :text="dinosaur.text"
-                        :index="index"
+                        v-bind="{text: dinosaur.text, index}"
                         :key="dinosaur.id"
                         @delete-dyno="deleteItem($event)">
                     </li>
                 </ul>
-                <footer>You have {{dynoLength}} dyno{{dynoLength > 1 ? 's' : ''}}</footer>
+                <krtl-footer :dynoLength="dynoLength"/>
             </template>
         </div>
     </script>
-    <!-- krtl-card component script -->
+    <!-- filters scripts -->
+    <script type="text/javascript" src="filters/filter-util.js"></script>
+    <!-- krtl-components scripts -->
     <script type="text/javascript" src="components/krtl-card.js"></script>
     <script type="text/javascript" src="components/krtl-triangle.js"></script>
     <script type="text/javascript" src="components/krtl-dynoitem.js"></script>
+    <script type="text/javascript" src="components/krtl-dynoinput.js"></script>
+    <script type="text/javascript" src="components/krtl-footer.js"></script>
     <!-- vm initialization -->
     <script>
         const vm = new Vue({
