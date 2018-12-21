@@ -9,68 +9,47 @@
     <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
     <link rel="stylesheet" type="text/css" media="screen" href="main.css" />
     <link rel="stylesheet" type="text/css" media="screen" href="card.css" />
+    <link rel="stylesheet" type="text/css" media="screen" href="triangle.css" />
 </head>
 
 <body>
-    <div id="card" class="card">
-        <header>{{title}}</header>
-        <form class="input" @submit.prevent="addItem">
-            <input type="text" id="itemInput">
-            <button>Add dinosaurs</button>
-        </form>
-        <ul>
-            <li v-for='(dinosaur, index) of items'>
-                <button type="button" @click='deleteItem(index)'>x</button>
-                {{ dinosaur.text | capitalize }}
-                <p>
-                    {{ dinosaur.text | undercase | url }}
-                </p>
-            </li>
-        </ul>
-        <footer>You have {{dynoLength}} dyno{{dynoLength > 1 ? 's' : ''}}</footer>
+    <div id="vm">
+        <krtl-card></krtl-card>
     </div>
+    <!-- krtl-card component template -->
+    <script type=text/x-template id='krtl-card'>
+        <div class='card'>
+            <header :style="headerClassObject">{{title}}
+                <div class="expander" @click="expanded = !expanded"
+                    :class='{expanded: expanded}'><krtl-triangle></krtl-triangle></div>
+            </header>
+            <template v-if='expanded'>
+                <form class="input" @submit.prevent="addItem">
+                    <input type="text" id="itemInput" v-model='userInput'>
+                    <button>Add dinosaurs</button>
+                </form>
+                <ul>
+                    <li v-for='(dinosaur, index) of items'
+                        is="krtl-dynoitem"
+                        :text="dinosaur.text"
+                        :index="index"
+                        :key="dinosaur.id"
+                        @delete-dyno="deleteItem($event)">
+                    </li>
+                </ul>
+                <footer>You have {{dynoLength}} dyno{{dynoLength > 1 ? 's' : ''}}</footer>
+            </template>
+        </div>
+    </script>
+    <!-- krtl-card component script -->
+    <script type="text/javascript" src="components/krtl-card.js"></script>
+    <script type="text/javascript" src="components/krtl-triangle.js"></script>
+    <script type="text/javascript" src="components/krtl-dynoitem.js"></script>
+    <!-- vm initialization -->
     <script>
-        const card = new Vue({
-            el: "#card",
-            data: {
-                title: 'Dinosaurs',
-                items: [
-                    { text: 'Velociraptor' },
-                    { text: 'Triceratorps' },
-                    { text: 'stegosaurus' },
-                ]
-            },
-            methods: {
-                addItem() {
-                    const input = document.getElementById('itemInput');
-                    if (input.value !== '') {
-                        this.items.push({ text: input.value });
-                        input.value = '';
-                    }
-                },
-                deleteItem(index) {
-                    this.items.splice(index, 1);
-                }
-            },
-            filters: {
-                capitalize(value) {
-                    if (!value) return '';
-                    return value.charAt(0).toUpperCase() + value.slice(1);
-                },
-                undercase(value) {
-                    if (!value) return '';
-                    return value.charAt(0).toLowerCase() + value.slice(1);
-                },
-                url(value) {
-                    return `https://www.github.com/${value}`
-                }
-            },
-            computed: {
-                dynoLength() {
-                    return this.items.length;
-                }
-            },
-        })
+        const vm = new Vue({
+            el: "#vm",
+        });
     </script>
 </body>
 

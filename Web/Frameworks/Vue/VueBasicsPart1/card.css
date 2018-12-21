@@ -67,6 +67,22 @@
     margin: 0;
 }
 
+.card > header > .expander {
+    font-family: Arial, Helvetica, sans-serif;
+    cursor: pointer;
+}
+
+.expanded {
+    transform: rotate(0.5turn);
+}
+
+.card > header {
+    user-select: none;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
 .input {
     display: flex;
     justify-content: space-between;
