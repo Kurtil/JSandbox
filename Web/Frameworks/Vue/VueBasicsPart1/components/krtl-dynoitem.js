@@ -17,9 +17,9 @@ Vue.component('KrtlDynoitem',
     template: `
         <li class="dynoitem">
             <button type="button" @click='onDeleteClicked'>x</button>
-            {{ this.text | capitalize }}
+            {{ text | capitalize }}
             <p>
-                {{ this.text | undercase | url }}
+                {{ text | undercase | url }}
             </p>
         </li>`
 });
