@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <title>Animation and transition in vue.js</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+    <link rel="stylesheet" type="text/css" media="screen" href="main.css" />
+</head>
+<body>
+    <div id="app"></div>
+</body>
+<script>
+    Vue.component('KrtlComp1', {
+        data() {
+            return {
+                message: 'I am component 1',
+            };
+        },
+        template: `<div class="cmp1">{{message}}</div>`,
+    });
+    Vue.component('KrtlComp2', {
+        data() {
+            return {
+                message: 'I am component 2',
+            };
+        },
+        template: `<div class="cmp2">{{message}}</div>`,
+    });
+
+    const app = new Vue({
+        el: '#app',
+        template:
+            `<div class="app">
+                <span @click='toggle = !toggle'>{{message}}</span>
+                <transition name='nested-comp'>
+                    <div v-if='toggle'>
+                        <KrtlComp1/>
+                        <KrtlComp2/>
+                    </div>
+                </transition>
+            </div>`,
+        data: {
+            message: 'Hello animation and transition!',
+            toggle: true,
+        },
+    });
+</script>
+<style>
+    .nested-comp-enter-active {
+        transition: all .8s cubic-bezier(1.0, 0.5, 0.8, 1.0);
+    }
+    .nested-comp-leave-active {
+        animation: bounce-in .5s;
+    }
+    .nested-comp-enter {
+        transform: translateX(-30px);
+        opacity: 0;
+    }
+    @keyframes bounce-in {
+    0% {
+        transform: scale(0);
+    }
+    50% {
+        transform: scale(1.5);
+        opacity: 0.8;
+    }
+    100% {
+        transform: scale(1);
+        opacity: 0;
+    }
+    }
+</style>
+</html>

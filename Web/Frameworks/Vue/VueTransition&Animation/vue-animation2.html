@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <title>Animation and transition for lists in vue.js</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+    <link rel="stylesheet" type="text/css" media="screen" href="main.css" />
+</head>
+
+<body>
+    <div id="app"></div>
+</body>
+<script>
+    const app = new Vue({
+        el: '#app',
+        template:
+            `<div class="app">
+                <div>
+                    <button @click='add'>Add</button>
+                    <button @click='remove'>Remove</button>
+                </div>
+                <transition-group tag='ul' name='list' class='list-item'>
+                    <li v-for='el of list' :key='el.id'>
+                        {{el.message}}
+                    </li>
+                </transition-group>
+            </div>`,
+        methods: {
+            randomIndex() {
+                return Math.floor(Math.random() * this.list.length);
+            },
+            add() {
+                this.list.splice(this.randomIndex(), 0, {
+                    id: this.nextNum,
+                    message: `message ${this.nextNum}`
+                });
+                this.nextNum++;
+            },
+            remove() {
+                this.list.splice(this.randomIndex(), 1);
+                // this.nextNum--;
+            },
+        },
+        data: {
+            list: [
+                { id: 1, message: 'message 1' },
+                { id: 2, message: 'message 2' },
+                { id: 3, message: 'message 3' },
+                { id: 4, message: 'message 4' },
+                { id: 5, message: 'message 5' },
+                { id: 6, message: 'message 6' },
+                { id: 7, message: 'message 7' },
+                { id: 8, message: 'message 8' },
+            ],
+            nextNum: 9,
+        },
+    });
+</script>
+<style>
+    .list-item {
+        transition: all 1s;
+        display: inline-block;
+    }
+    .list-leave-active {
+        position: absolute;
+    }
+    .list-enter,
+    .list-leave-to {
+        opacity: 0;
+        transform: translateY(30px);
+    }
+    .list-move {
+        transition: transform 1s;
+    }
+</style>
+
+</html>
