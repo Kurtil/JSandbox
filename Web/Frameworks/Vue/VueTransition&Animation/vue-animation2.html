@@ -62,10 +62,11 @@
 <style>
     .list-item {
         transition: all 1s;
-        display: inline-block;
+        display: inline-block; /* FLIP animations do not work on display: inline element */
     }
     .list-leave-active {
-        position: absolute;
+        position: absolute; /* needed for the delete item animations of others
+        element higher in the list*/
     }
     .list-enter,
     .list-leave-to {
