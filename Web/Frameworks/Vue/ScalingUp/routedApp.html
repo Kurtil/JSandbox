@@ -1,0 +1,47 @@
+<script src="https://unpkg.com/vue/dist/vue.js"></script>
+<script src="https://unpkg.com/vue-router/dist/vue-router.js"></script>
+
+<div id="app">
+    <h1>Hello App!</h1>
+    <p @click='logger'>
+        <router-link :to="'/foo/' + param1">Go to Foo</router-link>
+        <router-link :to="{name: 'bar'}">Go to Bar</router-link>
+        <router-link :to="{name: 'foo2'}">Go to Foo 2</router-link>
+        <input type="text" v-model='param1'>
+    </p>
+    <router-view></router-view>
+    <router-view name='b-side'></router-view>
+</div>
+
+<script>
+    const Foo = {
+        props: {
+            par: String,
+        },
+        template: '<div>foo: {{this.par}}</div>'
+    };
+
+    const Bar = { template: '<div>bar</div>' };
+
+    const routes = [
+        // When props is set to true, the route.params will be set as the component props.
+        // This is better than using $route.params.par because it does not couple component to router
+        { path: '/foo/:par', component: Foo, props: true },
+        { path: '/foo2', name: 'foo2', redirect: '/foo/coucou' },
+        { path: '/bar', name: 'bar', components: {default: Bar, 'b-side': Foo} }
+    ];
+
+    const router = new VueRouter({ routes });
+
+    const app = new Vue({
+        router,
+        data: {
+            'param1': '12f'
+        },
+        methods: {
+            logger() {
+                console.log(this.$route);
+            }
+        }
+    }).$mount('#app');
+</script>
