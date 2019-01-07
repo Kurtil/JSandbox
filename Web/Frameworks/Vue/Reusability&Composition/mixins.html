@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <title>Reusability & Composition - mixins</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+</head>
+
+<body>
+    <div id="app">
+        <krtl-cmp1></krtl-cmp1>
+        <krtl-cmp2></krtl-cmp2>
+    </div>
+</body>
+<script>
+    const mixin = {
+        created() {
+            this.hello();
+        },
+        methods: {
+            hello() {
+                console.log('hello from mixin');
+            },
+        },
+    };
+
+    const Component = Vue.extend({
+        mixins: [mixin],
+    });
+
+    const component1 = new Component();
+    const component2 = new Component();
+
+    const app = new Vue({
+        el: "#app",
+        components: {
+            'KrtlCmp1': { ...component1, template: `<div>Comp1</div>`, },
+            'KrtlCmp2': { ...component2, template: `<div>Comp2</div>` },
+        },
+    });
+</script>
+
+</html>
