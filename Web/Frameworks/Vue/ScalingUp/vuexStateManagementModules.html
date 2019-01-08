@@ -1,0 +1,63 @@
+<script src="https://unpkg.com/vue/dist/vue.js"></script>
+<script src="https://unpkg.com/vuex"></script>
+
+<div id="app">
+    {{ $store.state }}
+</div>
+
+<script>
+
+    const moduleA = {
+        state: {
+            cpt: 12
+        },
+        getters: {
+            cpt: state => state.cpt,
+        },
+        namespaced: true,
+    };
+
+    const moduleB = {
+        state: {
+            cpt: 265
+        },
+        getters: {
+            cpt: state => state.cpt,
+        },
+        namespaced: true,
+    };
+
+    const store = new Vuex.Store({
+        modules: {
+            a: moduleA,
+            b: moduleB
+        },
+    });
+
+    const app = new Vue({
+        store,
+        data: {
+            message: 'hello world!',
+        },
+    }).$mount('#app');
+</script>
+
+<style>
+    #app {
+        width: 50%;
+        margin: auto;
+        text-align: center;
+    }
+
+    .cmp1 {
+        background-color: coral;
+    }
+
+    .cmp2 {
+        background-color: cadetblue;
+    }
+
+    .cpt-setter {
+        margin-top: 1em;
+    }
+</style>

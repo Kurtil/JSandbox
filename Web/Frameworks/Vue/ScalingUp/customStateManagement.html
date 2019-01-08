@@ -1,0 +1,41 @@
+<script src="https://unpkg.com/vue/dist/vue.js"></script>
+
+<div class="main-app">
+    <div id="app1">
+        <h1>Hello App1!</h1>
+        <p>{{message}}</p>
+        <krtl-bar />
+    </div>
+    <div id="app2">
+        <h1>Hello App2!</h1>
+        <p>{{message}}</p>
+        <krtl-foo />
+    </div>
+</div>
+
+<script>
+    const data = {
+        message: "hello all app",
+        cpt: 0,
+    };
+
+    Vue.component('krtl-foo', {
+        template:
+        `<div>
+            foo: {{this.$root.$data}}
+            <button @click="$root.$data.cpt++">Click</button>
+        </div>`
+    });
+
+    Vue.component('krtl-bar', {
+        template: '<div>bar: {{this.$root.$data}}</div>'
+    });
+
+    const app1 = new Vue({
+        data,
+    }).$mount('#app1');
+
+    const app2 = new Vue({
+        data,
+    }).$mount('#app2');
+</script>

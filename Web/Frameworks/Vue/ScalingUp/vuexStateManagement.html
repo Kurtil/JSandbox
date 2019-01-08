@@ -1,0 +1,156 @@
+<script src="https://unpkg.com/vue/dist/vue.js"></script>
+<script src="https://unpkg.com/vuex"></script>
+
+<div id="app">
+    {{ message }}
+    <krtl-cmp1></krtl-cmp1>
+    <krtl-cmp2></krtl-cmp2>
+    <krtl-cpt-setter></krtl-cpt-setter>
+</div>
+
+<script>
+
+    Vue.component('krtl-cmp1', {
+        data() {
+            return {
+                cpt: 0
+            };
+        },
+        template:
+            `<div class="cmp1">
+            <p>Cpt: {{$store.state.cpt}}</p>
+            <button @click='$store.commit("increment")'>+</button>
+            <button @click='$store.commit("decrement")'>-</button>
+        </div>`,
+    });
+
+    Vue.component('krtl-cmp2', {
+        data() {
+            return {
+                num: 0,
+            };
+        },
+        computed: {
+            ...Vuex.mapState({ cptAlias: 'cpt' }),
+            cptAt() {
+                return this.$store.getters.isCptAt(this.num);
+            },
+            style() {
+                return { 'background-color': this.cptAt ? 'green' : 'red' };
+            }
+        },
+        // mapState is an helper to get getters from state
+        // or even : Vuex.mapState(['cpt', ...potentialOtherStateProperties]);
+        // there is also mapGetters
+        methods: {
+            // there is an util for mutations : mapMutations(['...', ]),
+            // and for actions: mapActions(['...', ])
+            incrementCpt() {
+                this.$store.dispatch("increment"); // dispatch for actions
+            },
+            decrementCpt() {
+                this.$store.commit("decrement");
+            },
+        },
+        template:
+            `<div class="cmp2">
+            <p>Cpt: {{cptAlias}}</p>
+            <button @click='incrementCpt'>+</button>
+            <button @click='decrementCpt'>-</button>
+            <input v-model.number='num'/>
+            <div :style="style">CHECKER</div>
+        </div>`,
+    });
+
+    Vue.component('krtl-cpt-setter', {
+        data() {
+            return {
+                num: 0,
+            };
+        },
+        template:
+            `<div class="cpt-setter">
+            <input v-model.number='num'>
+            <button @click='setCpt'>Set</button>
+        </div>`,
+        methods: {
+            setCpt() {
+                this.$store.dispatch('setAsync2', {amount: this.num});
+            }
+        }
+    });
+
+    const store = new Vuex.Store({
+        state: {
+            cpt: 0,
+        },
+        mutations: {
+            increment(state) {
+                state.cpt++;
+            },
+            decrement(state) {
+                state.cpt--;
+            },
+            setCpt(state, payload) {
+                state.cpt = payload;
+            }
+        },
+        getters: {
+            megaCpt(state, getters) {
+                return state.cpt * 100;
+            },
+            gigaCpt(state, getters) {
+                return getters.megaCpt * 2;
+            },
+            isCptAt: state => cpt => state.cpt === cpt,
+        },
+        // Next, action can perfom async operation ( mutation  cannot !)
+        // - Instead of mutating the state, actions commit mutations.
+        // - Actions can contain arbitrary asynchronous operations.
+        actions: {
+            // the object that is received as parameter is a context that can
+            // be call with all methods of the store (getters, ...) but it is not the store
+            increment({commit}) {
+                commit('increment');
+            },
+            async setAsync2({dispatch, commit}, payload) {
+                const {amount} = await dispatch('setAsync', payload);
+                commit('setCpt', amount);
+            },
+            setAsync(context, payload) {
+                return new Promise((resolve, reject) => {
+                    setTimeout(() => {
+                        resolve(payload);
+                    }, 2000);
+                });
+            }
+        }
+    });
+
+    const app = new Vue({
+        store,
+        data: {
+            message: 'hello world!',
+        },
+    }).$mount('#app');
+</script>
+
+<style>
+    #app {
+        width: 50%;
+        margin: auto;
+        text-align: center;
+    }
+
+    .cmp1 {
+        background-color: coral;
+    }
+
+    .cmp2 {
+        background-color: cadetblue;
+    }
+
+    .cpt-setter {
+        margin-top: 1em;
+    }
+</style>
