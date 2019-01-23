@@ -1,0 +1,40 @@
+{ "height":5,
+ "infinite":false,
+ "layers":[
+        {
+         "data":[45, 45, 45, 45, 45, 45, 45, 45, 45, 45, 45, 45, 29, 70, 45, 45, 45, 45, 45, 45, 45, 45, 45, 45, 45],
+         "height":5,
+         "id":1,
+         "name":"Tile Layer 1",
+         "opacity":1,
+         "type":"tilelayer",
+         "visible":true,
+         "width":5,
+         "x":0,
+         "y":0
+        }],
+ "nextlayerid":2,
+ "nextobjectid":1,
+ "orientation":"orthogonal",
+ "renderorder":"right-down",
+ "tiledversion":"1.2.1",
+ "tileheight":64,
+ "tilesets":[
+        {
+         "columns":26,
+         "firstgid":1,
+         "image":"SokobanSpritesSheet.png",
+         "imageheight":256,
+         "imagewidth":1664,
+         "margin":0,
+         "name":"SokobanSpritesSheet",
+         "spacing":0,
+         "tilecount":104,
+         "tileheight":64,
+         "tilewidth":64
+        }],
+ "tilewidth":64,
+ "type":"map",
+ "version":1.2,
+ "width":5
+}
