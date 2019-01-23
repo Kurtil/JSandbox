@@ -20,7 +20,14 @@ module.exports = {
                 use: [
                     'file-loader'
                 ]
-            }
+            },
+            {
+                test: /\.(woff|woff2|eot|ttf|otf)$/,
+                use: [
+                    'file-loader',
+                    'url-loader'
+                ],
+            },
         ]
     },
 };
