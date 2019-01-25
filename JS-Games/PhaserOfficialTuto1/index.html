@@ -16,7 +16,7 @@
 
     <script type="text/javascript">
 
-        var config = {
+        const config = {
             type: Phaser.AUTO,
             width: 800,
             height: 600,
@@ -28,13 +28,14 @@
                 }
             },
             scene: {
+                player: {},
                 preload,
                 create,
                 update
             }
         };
 
-        var game = new Phaser.Game(config);
+        const game = new Phaser.Game(config);
 
         function preload() {
             this.load.image('sky', 'assets/sky.png');
@@ -53,6 +54,7 @@
 
             const platforms = this.physics.add.staticGroup();
 
+            // refresh body to tell the physic world to take into account the scale up
             platforms.create(400, 568, 'ground').setScale(2).refreshBody();
 
             platforms.create(600, 400, 'ground');
@@ -60,11 +62,20 @@
             platforms.create(750, 220, 'ground');
 
             // create player
-            const player = this.physics.add.sprite(100, 450, 'dude');
+            // dynamic by default
+            this.player = this.physics.add.sprite(100, 450, 'dude');
 
-            player.setBounce(0.2);
-            player.setCollideWorldBounds(true);
+            // This means when it lands after jumping it will bounce ever so slightly.
+            this.player.setBounce(0.2);
+            // collide with the limit of the world
+            this.player.setCollideWorldBounds(true);
 
+            // player.body.setGravityY(300);
+
+            // add collider between player and the platforms group
+            this.physics.add.collider(this.player, platforms);
+
+            // Animations
             this.anims.create({
                 key: 'left',
                 frames: this.anims.generateFrameNumbers('dude', { start: 0, end: 3 }),
@@ -87,6 +98,28 @@
         }
 
         function update() {
+            // Controlls
+            const cursors = this.input.keyboard.createCursorKeys();
+
+            if (cursors.left.isDown) {
+                this.player.setVelocityX(-160);
+
+                this.player.anims.play('left', true);
+            }
+            else if (cursors.right.isDown) {
+                this.player.setVelocityX(160);
+
+                this.player.anims.play('right', true);
+            }
+            else {
+                this.player.setVelocityX(0);
+
+                this.player.anims.play('turn');
+            }
+
+            if (cursors.up.isDown && this.player.body.touching.down) {
+                this.player.setVelocityY(-330);
+            }
         }
 
     </script>
