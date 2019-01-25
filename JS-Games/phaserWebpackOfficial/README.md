@@ -1,6 +1,6 @@
-# Phaser 3 Webpack Project Template
+# Phaser 3 Webpack Project Template with Typescript
 
-A Phaser 3 Project Template
+A Phaser 3 Project Template with Typescript
 
 ### Requirements
 
