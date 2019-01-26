@@ -17,8 +17,7 @@ export default class Scene3 extends Phaser.Scene {
 
     create() {
 
-        this.player = this.physics.add.sprite(400, 350, "atlas", "misa-front");
-        const map = this.make.tilemap({ key: 'map', tileWidth: 16, tileHeight: 16 });
+        const map = this.make.tilemap({ key: 'map' });
 
         // Parameters are the name you gave the tileset in Tiled and then the key of the tileset image in
         // Phaser's cache (i.e. the name you used in preload)
@@ -44,8 +43,8 @@ export default class Scene3 extends Phaser.Scene {
         // a bit of whitespace, so I'm using setSize & setOffset to control the size of the player's body.
         this.player = this.physics.add
             .sprite(spawnPoint.x, spawnPoint.y, "atlas", "misa-front")
-            .setSize(30, 40)
-            .setOffset(0, 24);
+            .setSize(30, 20)
+            .setOffset(0, 45);
 
         // Watch the player and worldLayer for collisions, for the duration of the scene:
         this.physics.add.collider(this.player, worldLayer);
