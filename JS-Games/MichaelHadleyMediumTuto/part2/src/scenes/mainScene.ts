@@ -1,5 +1,5 @@
 import * as Phaser from "phaser";
-import Player from "./player";
+import Player from "./player.stateMachine";
 import MouseTileMarker from "./mouse-tile-maker";
 
 /**
