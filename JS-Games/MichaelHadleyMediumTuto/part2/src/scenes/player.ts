@@ -27,14 +27,17 @@ export default class Player {
             .setOffset(7, 9);
 
         // Track the arrow keys & WASD
-        const { LEFT, RIGHT, UP, W, A, D } = Phaser.Input.Keyboard.KeyCodes;
+        const { LEFT, RIGHT, UP, W, A, D, SPACE, R, T } = Phaser.Input.Keyboard.KeyCodes;
         this.keys = scene.input.keyboard.addKeys({
             left: LEFT,
             right: RIGHT,
             up: UP,
             w: W,
             a: A,
-            d: D
+            d: D,
+            space: SPACE,
+            r: R,
+            t: T
         });
     }
 
@@ -72,8 +75,18 @@ export default class Player {
         // Update the animation/texture based on the state of the player
         if (onGround) {
             this.doubleJump = true;
-            if (this.sprite.body.velocity.x !== 0) this.sprite.anims.play("player-run", true);
-            else this.sprite.anims.play("player-idle", true);
+            if (this.sprite.body.velocity.x !== 0) {
+                this.sprite.anims.play("player-run", true);
+            } else if (this.keys.t.isDown) {
+                this.sprite.anims.play('player-red', true);
+            } else if (this.keys.r.isDown) {
+                this.sprite.anims.play('player-return', true);
+            } else if (this.keys.space.isDown) {
+                this.sprite.anims.play('player-action', true);
+            }
+            else {
+                this.sprite.anims.play("player-idle", true);
+            }
         } else {
             this.sprite.anims.stop();
             this.sprite.setTexture("player", 10);
@@ -96,11 +109,34 @@ export default class Player {
             key: "player-run",
             frames: anims.generateFrameNumbers("player", { start: 8, end: 15 }),
             frameRate: 12,
+            repeat: -1,
+            yoyo: true,
+        });
+        anims.create({
+            key: 'player-action',
+            frames: anims.generateFrameNumbers("player", { start: 24, end: 27 }),
+            frameRate: 12,
             repeat: -1
+        });
+        anims.create({
+            key: 'player-red',
+            frames: anims.generateFrameNumbers("player", { start: 16, end: 19 }),
+            frameRate: 6,
+            // yoyo: true,
+            repeat: 0,
+            hideOnComplete: true
+
+        });
+        anims.create({
+            key: 'player-return',
+            frames: anims.generateFrameNumbers("player", { start: 20, end: 23 }),
+            frameRate: 20,
+            showOnStart: true,
+            repeat: 0
         });
     }
 
     doubleJumpAvailable(time: number) {
-        return this.doubleJump && (time - this.lastJumpTime> 200);
+        return this.doubleJump && (time - this.lastJumpTime > 200);
     }
 }
