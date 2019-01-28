@@ -45,6 +45,9 @@ export default class Player {
     }
 
     update(time, delta) {
+
+        const commandes = this.handleUserInput();
+        if (commandes.length != 0) this.currentState.handleInput(commandes);
         this.currentState.update();
     }
 
@@ -68,32 +71,39 @@ export default class Player {
         });
     }
 
-    doubleJumpAvailable(time: number) {
-        return this.doubleJump && (time - this.lastJumpTime > 200);
-    }
-
     setState(state: State) {
         this.currentState = state;
     }
 
-    move(acceleration: number) {
-        if (this.keys.left.isDown || this.keys.a.isDown) {
-            this.sprite.setAccelerationX(-acceleration);
-            this.sprite.setFlipX(true);
-        } else if (this.keys.right.isDown || this.keys.d.isDown) {
-            this.sprite.setAccelerationX(acceleration);
-            this.sprite.setFlipX(false);
-        }
+    move(acceleration: number, leftDirection = false) {
+        this.sprite.setAccelerationX(leftDirection ? -acceleration : acceleration);
+        this.sprite.setFlipX(leftDirection);
     }
+
     jump() {
         this.sprite.setVelocityY(-500);
+    }
+
+    handleUserInput() {
+        const commandes = [];
+        if (this.keys.left.isDown) {
+            commandes.push('left');
+        }
+        if (
+            this.keys.right.isDown) {
+            commandes.push('right');
+        }
+        if (this.keys.up.isDown) {
+            commandes.push('up');
+        }
+        return commandes;
     }
 }
 
 interface State {
     player: Player;
     update();
-    handleInput();
+    handleInput(commandes: string[]);
 }
 
 class IdlePlayerState implements State {
@@ -107,24 +117,35 @@ class IdlePlayerState implements State {
     }
 
     update() {
+        // quite idle state if moving
+        const { x, y } = this.player.sprite.body.velocity;
+        if (x !== 0 || y !== 0) {
+            if (this.player.sprite.body.blocked.down) {
+                this.player.setState(new RunningPlayerState(this.player));
+            } else {
+                this.player.setState(new AirPlayerState(this.player));
+            }
+        }
+        // TODO must we continue if state changed... ?
         this.player.sprite.setAccelerationX(0);
         this.player.sprite.anims.play("player-idle", true);
-
-        this.handleInput();
     }
 
-    handleInput() {
-        if (!this.player.sprite.body.blocked.down) {
-            this.player.setState(new AirPlayerState(this.player));
-        } else if (this.player.keys.left.isDown ||
-            this.player.keys.a.isDown ||
-            this.player.keys.right.isDown ||
-            this.player.keys.d.isDown) {
-            this.player.move(this.acceleration);
-            this.player.setState(new RunningPlayerState(this.player));
-        } else if (this.player.keys.up.isDown) {
+    handleInput(commandes: string[]) {
+        const up = commandes.find(e => e === 'up') !== undefined;
+        const right = commandes.find(e => e === 'right') !== undefined;
+        const left = commandes.find(e => e === 'left') !== undefined;
+
+        // TODO should we change state here or just in update... ?
+        if (up) {
             this.player.jump();
-            return this.player.setState(new AirPlayerState(this.player));
+            this.player.setState(new AirPlayerState(this.player));
+        }
+        if (right) {
+            this.player.move(this.acceleration);
+        }
+        if (left) {
+            this.player.move(this.acceleration);
         }
     }
 }
@@ -140,24 +161,27 @@ class AirPlayerState implements State {
     }
 
     update() {
-        this.player.sprite.anims.stop();
-        this.player.sprite.setTexture("player", 10);
-
-        this.player.move(this.acceleration);
-
-        this.handleInput();
-    }
-
-    handleInput() {
         if (this.player.sprite.body.blocked.down) {
             if (this.player.sprite.body.velocity.x !== 0) {
                 this.player.setState(new RunningPlayerState(this.player));
-            } else if (this.player.keys.up.isDown) {
-                this.player.jump();
-                return this.player.setState(new AirPlayerState(this.player));
             } else {
                 this.player.setState(new IdlePlayerState(this.player));
             }
+        }
+        this.player.sprite.anims.stop();
+        this.player.sprite.setTexture("player", 10);
+    }
+
+    handleInput(commandes: string[]) {
+        const right = commandes.find(e => e === 'right') !== undefined;
+        const left = commandes.find(e => e === 'left') !== undefined;
+
+        // TODO should we change state here or just in update... ?
+        if (right) {
+            this.player.move(this.acceleration);
+        }
+        if (left) {
+            this.player.move(this.acceleration, true);
         }
     }
 }
@@ -173,24 +197,32 @@ class RunningPlayerState implements State {
     }
 
     update() {
-        this.player.sprite.anims.play("player-run", true);
-        this.player.move(this.acceleration);
+        if (this.player.sprite.body.blocked.down &&
+            (this.player.sprite.body.blocked.left || this.player.sprite.body.blocked.right)) {
+            this.player.setState(new IdlePlayerState(this.player));
+        }
+        if (!this.player.sprite.body.blocked.down) {
+            this.player.setState(new AirPlayerState(this.player));
+        }
 
-        this.handleInput();
+        this.player.sprite.anims.play("player-run", true);
     }
 
-    handleInput() {
-        if (!this.player.sprite.body.blocked.down) {
-            return this.player.setState(new AirPlayerState(this.player));
-        }
-        if (this.player.sprite.body.blocked.down && this.player.keys.up.isDown) {
-            this.player.jump();
-            return this.player.setState(new AirPlayerState(this.player));
-        }
+    handleInput(commandes: string[]) {
+        const up = commandes.find(e => e === 'up') !== undefined;
+        const right = commandes.find(e => e === 'right') !== undefined;
+        const left = commandes.find(e => e === 'left') !== undefined;
 
-        if (!(this.player.keys.left.isDown || this.player.keys.a.isDown) &&
-            !(this.player.keys.right.isDown || this.player.keys.d.isDown)) {
-            this.player.setState(new IdlePlayerState(this.player));
+        // TODO should we change state here or just in update... ?
+        if (up) {
+            this.player.jump();
+            this.player.setState(new AirPlayerState(this.player));
+        }
+        if (right) {
+            this.player.move(this.acceleration);
+        }
+        if (left) {
+            this.player.move(this.acceleration, true);
         }
     }
 }
