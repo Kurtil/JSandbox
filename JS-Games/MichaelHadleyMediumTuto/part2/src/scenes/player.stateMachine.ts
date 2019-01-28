@@ -12,7 +12,7 @@ export default class Player {
     keys = null;
     private doubleJump = true;
     private lastJumpTime: number = 0;
-    private currentState: State = new IdlePlayerState(this);
+    private currentState: State;
 
     constructor(scene: Phaser.Scene, x: number, y: number) {
         this.scene = scene;
@@ -37,6 +37,8 @@ export default class Player {
             a: A,
             d: D
         });
+
+        this.currentState = new IdlePlayerState(this);
     }
 
     freeze() {
@@ -47,7 +49,12 @@ export default class Player {
     update(time, delta) {
 
         const commandes = this.handleUserInput();
-        if (commandes.length != 0) this.currentState.handleInput(commandes);
+        if (commandes.length != 0) {
+            this.currentState.handleInput(commandes);
+        } else {
+            // if no commande, it is like the command stop mouvement (horizontally only)
+            this.sprite.setAccelerationX(0);
+        }
         this.currentState.update();
     }
 
@@ -114,6 +121,8 @@ class IdlePlayerState implements State {
     constructor(player: Player) {
         this.player = player;
         this.acceleration = 600;
+
+        this.player.sprite.anims.play("player-idle");
     }
 
     update() {
@@ -126,9 +135,6 @@ class IdlePlayerState implements State {
                 this.player.setState(new AirPlayerState(this.player));
             }
         }
-        // TODO must we continue if state changed... ?
-        this.player.sprite.setAccelerationX(0);
-        this.player.sprite.anims.play("player-idle", true);
     }
 
     handleInput(commandes: string[]) {
@@ -158,6 +164,9 @@ class AirPlayerState implements State {
     constructor(player: Player) {
         this.player = player;
         this.acceleration = 200;
+
+        this.player.sprite.anims.stop();
+        this.player.sprite.setTexture("player", 10);
     }
 
     update() {
@@ -168,8 +177,6 @@ class AirPlayerState implements State {
                 this.player.setState(new IdlePlayerState(this.player));
             }
         }
-        this.player.sprite.anims.stop();
-        this.player.sprite.setTexture("player", 10);
     }
 
     handleInput(commandes: string[]) {
@@ -194,18 +201,18 @@ class RunningPlayerState implements State {
     constructor(player: Player) {
         this.player = player;
         this.acceleration = 200;
+
+        this.player.sprite.anims.play("player-run");
     }
 
     update() {
         if (this.player.sprite.body.blocked.down &&
-            (this.player.sprite.body.blocked.left || this.player.sprite.body.blocked.right)) {
+            (this.player.sprite.body.velocity.x === 0)) {
             this.player.setState(new IdlePlayerState(this.player));
         }
         if (!this.player.sprite.body.blocked.down) {
             this.player.setState(new AirPlayerState(this.player));
         }
-
-        this.player.sprite.anims.play("player-run", true);
     }
 
     handleInput(commandes: string[]) {
