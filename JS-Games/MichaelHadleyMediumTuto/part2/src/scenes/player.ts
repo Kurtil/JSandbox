@@ -7,6 +7,13 @@ import * as Phaser from "phaser";
  */
 export default class Player {
 
+    static parseCommandes(commandes: string[]): { up: boolean, right: boolean, left: boolean } {
+        const up = commandes.find(e => e === 'up') !== undefined;
+        const right = commandes.find(e => e === 'right') !== undefined;
+        const left = commandes.find(e => e === 'left') !== undefined;
+        return { up, right, left };
+    }
+
     private scene: Phaser.Scene = null;
     private sprite: Phaser.Physics.Arcade.Sprite = null;
     private keys = null;

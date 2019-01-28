@@ -1,4 +1,6 @@
 import * as Phaser from "phaser";
+import { State } from "./State";
+import { IdlePlayerState } from "./IdlePlayerState";
 
 /**
  * A class that wraps up our 2D platforming player logic. It creates, animates and moves a sprite in
@@ -6,6 +8,13 @@ import * as Phaser from "phaser";
  * method when you're done with the player.
  */
 export default class Player {
+
+    static parseCommandes(commandes: string[]): { up: boolean, right: boolean, left: boolean } {
+        const up = commandes.find(e => e === 'up') !== undefined;
+        const right = commandes.find(e => e === 'right') !== undefined;
+        const left = commandes.find(e => e === 'left') !== undefined;
+        return { up, right, left };
+    }
 
     private scene: Phaser.Scene = null;
     sprite: Phaser.Physics.Arcade.Sprite = null;
@@ -47,15 +56,8 @@ export default class Player {
     }
 
     update(time, delta) {
-
         const commandes = this.handleUserInput();
-        if (commandes.length != 0) {
-            this.currentState.handleInput(commandes);
-        } else {
-            // if no commande, it is like the command stop mouvement (horizontally only)
-            this.sprite.setAccelerationX(0);
-        }
-        this.currentState.update();
+        this.currentState.update(commandes);
     }
 
     destroy() {
@@ -87,6 +89,10 @@ export default class Player {
         this.sprite.setFlipX(leftDirection);
     }
 
+    stop() {
+        this.sprite.setAccelerationX(0);
+    }
+
     jump() {
         this.sprite.setVelocityY(-500);
     }
@@ -104,133 +110,6 @@ export default class Player {
             commandes.push('up');
         }
         return commandes;
-    }
-}
-
-interface State {
-    player: Player;
-    update();
-    handleInput(commandes: string[]);
-}
-
-class IdlePlayerState implements State {
-
-    player: Player;
-    private acceleration: number;
-
-    constructor(player: Player) {
-        this.player = player;
-        this.acceleration = 600;
-
-        this.player.sprite.anims.play("player-idle");
-    }
-
-    update() {
-        // quite idle state if moving
-        const { x, y } = this.player.sprite.body.velocity;
-        if (x !== 0 || y !== 0) {
-            if (this.player.sprite.body.blocked.down) {
-                this.player.setState(new RunningPlayerState(this.player));
-            } else {
-                this.player.setState(new AirPlayerState(this.player));
-            }
-        }
-    }
-
-    handleInput(commandes: string[]) {
-        const up = commandes.find(e => e === 'up') !== undefined;
-        const right = commandes.find(e => e === 'right') !== undefined;
-        const left = commandes.find(e => e === 'left') !== undefined;
-
-        // TODO should we change state here or just in update... ?
-        if (up) {
-            this.player.jump();
-            this.player.setState(new AirPlayerState(this.player));
-        }
-        if (right) {
-            this.player.move(this.acceleration);
-        }
-        if (left) {
-            this.player.move(this.acceleration);
-        }
-    }
-}
-
-class AirPlayerState implements State {
-
-    player: Player;
-    private acceleration: number;
-
-    constructor(player: Player) {
-        this.player = player;
-        this.acceleration = 200;
-
-        this.player.sprite.anims.stop();
-        this.player.sprite.setTexture("player", 10);
-    }
-
-    update() {
-        if (this.player.sprite.body.blocked.down) {
-            if (this.player.sprite.body.velocity.x !== 0) {
-                this.player.setState(new RunningPlayerState(this.player));
-            } else {
-                this.player.setState(new IdlePlayerState(this.player));
-            }
-        }
-    }
-
-    handleInput(commandes: string[]) {
-        const right = commandes.find(e => e === 'right') !== undefined;
-        const left = commandes.find(e => e === 'left') !== undefined;
-
-        // TODO should we change state here or just in update... ?
-        if (right) {
-            this.player.move(this.acceleration);
-        }
-        if (left) {
-            this.player.move(this.acceleration, true);
-        }
-    }
-}
-
-class RunningPlayerState implements State {
-
-    player: Player;
-    private acceleration: number;
-
-    constructor(player: Player) {
-        this.player = player;
-        this.acceleration = 200;
-
-        this.player.sprite.anims.play("player-run");
-    }
-
-    update() {
-        if (this.player.sprite.body.blocked.down &&
-            (this.player.sprite.body.velocity.x === 0)) {
-            this.player.setState(new IdlePlayerState(this.player));
-        }
-        if (!this.player.sprite.body.blocked.down) {
-            this.player.setState(new AirPlayerState(this.player));
-        }
-    }
-
-    handleInput(commandes: string[]) {
-        const up = commandes.find(e => e === 'up') !== undefined;
-        const right = commandes.find(e => e === 'right') !== undefined;
-        const left = commandes.find(e => e === 'left') !== undefined;
-
-        // TODO should we change state here or just in update... ?
-        if (up) {
-            this.player.jump();
-            this.player.setState(new AirPlayerState(this.player));
-        }
-        if (right) {
-            this.player.move(this.acceleration);
-        }
-        if (left) {
-            this.player.move(this.acceleration, true);
-        }
     }
 }
 
