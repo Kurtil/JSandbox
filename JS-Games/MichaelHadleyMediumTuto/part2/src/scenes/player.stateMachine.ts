@@ -32,6 +32,7 @@ export default class Player {
         this.sprite = scene.physics.add
             .sprite(x, y, "player", 0)
             .setDrag(1000, 0)
+            .setFrictionX(1000)
             .setMaxVelocity(300, 400)
             .setSize(18, 24)
             .setOffset(7, 9);
@@ -90,7 +91,7 @@ export default class Player {
     }
 
     stop() {
-        this.sprite.setAccelerationX(0);
+        // this.sprite.setAccelerationX(0);
     }
 
     jump() {

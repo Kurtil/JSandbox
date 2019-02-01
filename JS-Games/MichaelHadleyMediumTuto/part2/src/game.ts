@@ -1,6 +1,5 @@
 import * as Phaser from 'phaser';
 import MainScene from './scenes/mainScene';
-import PlatformerScene from './scenes/mainScene'
 
 const config: GameConfig = {
     type: Phaser.AUTO,
@@ -9,7 +8,7 @@ const config: GameConfig = {
     parent: "game-container",
     pixelArt: true,
     backgroundColor: "#1d212d",
-    scene: PlatformerScene,
+    scene: MainScene,
     physics: {
       default: "arcade",
       arcade: {
