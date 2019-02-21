@@ -1,0 +1,181 @@
+import Player from "../entities/player";
+import GunShip from "../entities/gunShip";
+import ChaserShip from "../entities/chaserShip";
+import CarrierShip from "../entities/carrierShip";
+
+export default class MainScene extends Phaser.Scene {
+  constructor() {
+    super({
+      key: "mainScene"
+    });
+  }
+
+  sfx: { laser, explosions };
+  player: Player;
+  keys: any = {};
+  enemies: any;
+  enemyLasers: any;
+  playerLasers: any;
+
+  preload() {
+    this.load.image("sprBg0", "assets/sprBg0.png");
+    this.load.image("sprBg1", "assets/sprBg1.png");
+    this.load.spritesheet("sprExplosion", "assets/sprExplosion.png", {
+      frameWidth: 32,
+      frameHeight: 32
+    });
+    this.load.spritesheet("sprEnemy0", "assets/sprEnemy0.png", {
+      frameWidth: 16,
+      frameHeight: 16
+    });
+    this.load.image("sprEnemy1", "assets/sprEnemy1.png");
+    this.load.spritesheet("sprEnemy2", "assets/sprEnemy2.png", {
+      frameWidth: 16,
+      frameHeight: 16
+    });
+    this.load.image("sprLaserEnemy0", "assets/sprLaserEnemy0.png");
+    this.load.image("sprLaserPlayer", "assets/sprLaserPlayer.png");
+    this.load.spritesheet("sprPlayer", "assets/sprPlayer.png", {
+      frameWidth: 16,
+      frameHeight: 16
+    });
+
+    this.load.audio("sndExplode0", "assets/sndExplode0.wav");
+    this.load.audio("sndExplode1", "assets/sndExplode1.wav");
+    this.load.audio("sndLaser", "assets/sndLaser.wav");
+  }
+
+  create() {
+    this.anims.create({
+      key: "sprEnemy0",
+      frames: this.anims.generateFrameNumbers("sprEnemy0", null),
+      frameRate: 20,
+      repeat: -1
+    });
+    this.anims.create({
+      key: "sprEnemy2",
+      frames: this.anims.generateFrameNumbers("sprEnemy2", null),
+      frameRate: 20,
+      repeat: -1
+    });
+    this.anims.create({
+      key: "sprExplosion",
+      frames: this.anims.generateFrameNumbers("sprExplosion", null),
+      frameRate: 20,
+      repeat: 0
+    });
+    this.anims.create({
+      key: "sprPlayer",
+      frames: this.anims.generateFrameNumbers("sprPlayer", null),
+      frameRate: 20,
+      repeat: -1
+    });
+
+    this.sfx = {
+      explosions: [
+        this.sound.add("sndExplode0"),
+        this.sound.add("sndExplode1")
+      ],
+      laser: this.sound.add("sndLaser")
+    };
+
+    this.player = new Player(
+      this,
+      <number>this.game.config.width * 0.5,
+      <number>this.game.config.height * 0.5,
+      "sprPlayer"
+    );
+
+    this.keys.keyZ = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.Z);
+    this.keys.keyS = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.S);
+    this.keys.keyQ = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.Q);
+    this.keys.keyD = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.D);
+    this.keys.keySpace = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.SPACE);
+
+    this.enemies = this.add.group();
+    this.enemyLasers = this.add.group();
+    this.playerLasers = this.add.group();
+
+    this.time.addEvent({
+      delay: 1000,
+      callback: function () {
+        this.generateEnemy();
+      },
+      callbackScope: this,
+      loop: true
+    });
+  }
+
+  update() {
+
+    for (var i = 0; i < this.enemies.getChildren().length; i++) {
+      var enemy = this.enemies.getChildren()[i];
+      enemy.update();
+    }
+
+    this.player.update();
+
+    if (this.keys.keyZ.isDown) {
+      this.player.moveUp();
+    }
+    else if (this.keys.keyS.isDown) {
+      this.player.moveDown();
+    }
+    if (this.keys.keyQ.isDown) {
+      this.player.moveLeft();
+    }
+    else if (this.keys.keyD.isDown) {
+      this.player.moveRight();
+    }
+
+    if (this.keys.keySpace.isDown) {
+      this.player.setData("isShooting", true);
+    }
+    else {
+      this.player.setData("timerShootTick", this.player.getData("timerShootDelay") - 1);
+      this.player.setData("isShooting", false);
+    }
+  }
+
+  private generateEnemy() {
+    var enemy = null;
+    if (Phaser.Math.Between(0, 10) >= 3) {
+      enemy = new GunShip(
+        this,
+        Phaser.Math.Between(0, <number>this.game.config.width),
+        0
+      );
+    }
+    else if (Phaser.Math.Between(0, 10) >= 5) {
+      if (this.getEnemiesByType("ChaserShip").length < 5) {
+        enemy = new ChaserShip(
+          this,
+          Phaser.Math.Between(0, <number>this.game.config.width),
+          0
+        );
+      }
+    }
+    else {
+      enemy = new CarrierShip(
+        this,
+        Phaser.Math.Between(0, <number>this.game.config.width),
+        0
+      );
+    }
+    if (enemy !== null) {
+      enemy.setScale(Phaser.Math.Between(10, 20) * 0.1);
+      this.enemies.add(enemy);
+    }
+  }
+
+  private getEnemiesByType(type) {
+    var arr = [];
+    for (var i = 0; i < this.enemies.getChildren().length; i++) {
+      var enemy = this.enemies.getChildren()[i];
+      if (enemy.getData("type") == type) {
+        arr.push(enemy);
+      }
+    }
+    return arr;
+  }
+}
