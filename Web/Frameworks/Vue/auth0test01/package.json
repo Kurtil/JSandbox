@@ -9,6 +9,7 @@
   },
   "dependencies": {
     "auth0-js": "^9.10.0",
+    "oidc-client": "^1.6.1",
     "vue": "^2.5.22",
     "vue-router": "^3.0.1"
   },

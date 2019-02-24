@@ -5,19 +5,23 @@
 </template>
 
 <script>
-import { handleAuth } from '../utils/auth.js'
+import { afterLoggedIn } from '../utils/auth.js'
+
 
 export default {
     name: "Callback",
     beforeMount() {
-        handleAuth(err => {
-            if (err) {
-                // eslint-disable-next-line
-                console.log(err)
-                return;
-            }
+        afterLoggedIn().then(() => {
             this.$router.push('/secret');
-        })
+        });
+    //     handleAuth(err => {
+    //         if (err) {
+    //             // eslint-disable-next-line
+    //             console.log(err)
+    //             return;
+    //         }
+    //         this.$router.push('/secret');
+    //     })
     },
     props: {
 

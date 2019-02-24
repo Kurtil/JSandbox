@@ -1,19 +1,34 @@
 import auth0 from "auth0-js";
+import Oidc from 'oidc-client';
+
+const mgr = new Oidc.UserManager({
+    authority: 'https://login-staging.bimdata.io',
+    client_id: '145056',
+    redirect_uri: 'http://localhost:8080/callback',
+    response_type: 'id_token token',
+    scope: 'openid profile',
+  });
 
 const webAuth = new auth0.WebAuth({
-    domain: 'kurtil01.eu.auth0.com',
-    clientID: 'jTWbDfwLg22gEZNB6oeRSgOPr2UCl2lN',
+    domain: 'login-staging.bimdata.io',
+    clientID: '145056',
     redirectUri: 'http://localhost:8080/callback',
-    responseType: 'token id_token',
+    responseType: 'id_token token',
     scope: 'openid profile'
 });
 
 let token = {};
 let userProfile  = {};
 
-const login = () => {
-    webAuth.authorize();
+const login = async function () {
+    // eslint-disable-next-line
+    await mgr.signinRedirect();
 };
+
+const afterLoggedIn = async () => {
+    const user = await mgr.signinRedirectCallback();
+    token.accessToken = user.access_token;
+}
 
 const handleAuth = cb => {
     webAuth.parseHash((err, authResult) => {
@@ -34,12 +49,16 @@ const getProfile = () => {
     return userProfile;
 }
 
+const getToken = () => {
+    return token;
+}
+
 const isLoggedIn = () => {
-    return token.accessToken && (new Date()).getTime() < token.expiry
+    return token.accessToken;
 }
 
 const logout = () => {
-    token = {};
+    token.accessToken = null;
     // [Object.keys(token)].forEach(key => token[key] = null);
 };
 
@@ -49,4 +68,6 @@ export {
     isLoggedIn,
     logout,
     getProfile,
+    afterLoggedIn,
+    getToken,
 };
