@@ -13,7 +13,6 @@ export default class Player extends Entity {
         this.setData("timerShootTick", this.getData("timerShootDelay") - 1);
     }
     moveUp() {
-        this.body;
         (<Phaser.Physics.Arcade.Body>this.body).velocity.y = -this.getData("speed");
     }
     moveDown() {
@@ -37,7 +36,7 @@ export default class Player extends Entity {
                 this.setData("timerShootTick", this.getData("timerShootTick") + 1); // every game update, increase timerShootTick by one until we reach the value of timerShootDelay
             }
             else { // when the "manual timer" is triggered:
-                var laser = new PlayerLaser(this.scene, this.x, this.y);
+                const laser = new PlayerLaser(this.scene, this.x, this.y);
                 (<MainScene>this.scene).playerLasers.add(laser);
 
                 (<MainScene>this.scene).sfx.laser.play(); // play the laser sound effect

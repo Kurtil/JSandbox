@@ -15,8 +15,8 @@ const config: GameConfig = {
     }
   },
   scene: [
-    MainScene,
     MainMenuScene,
+    MainScene,
     GameOverScene,
   ],
   pixelArt: true,

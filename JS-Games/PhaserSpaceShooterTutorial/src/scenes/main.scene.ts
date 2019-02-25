@@ -6,7 +6,7 @@ import CarrierShip from "../entities/carrierShip";
 export default class MainScene extends Phaser.Scene {
   constructor() {
     super({
-      key: "mainScene"
+      key: "MainScene"
     });
   }
 
@@ -104,36 +104,89 @@ export default class MainScene extends Phaser.Scene {
       callbackScope: this,
       loop: true
     });
+
+    this.physics.add.collider(this.playerLasers, this.enemies, this.onEnemyHitted);
+
+    this.physics.add.overlap(this.player, this.enemies, function (player, enemy) {
+      if (!player.getData("isDead") &&
+        !enemy.getData("isDead")) {
+        (<any>player).explode(false);
+        (<any>enemy).explode(true);
+      }
+    });
+
+    this.physics.add.overlap(this.player, this.enemyLasers, function (player, laser) {
+      if (!player.getData("isDead") &&
+        !laser.getData("isDead")) {
+        (<any>player).explode(false);
+        laser.destroy();
+      }
+    });
   }
 
   update() {
 
-    for (var i = 0; i < this.enemies.getChildren().length; i++) {
-      var enemy = this.enemies.getChildren()[i];
+    this.enemies.getChildren().forEach(enemy => {
       enemy.update();
-    }
+      // frustum culling : eliminate each entity that is not in the render screen
+      if (enemy.x > (<number>this.game.config.width + enemy.displayWidth) ||
+        enemy.x < -enemy.displayWidth ||
+        enemy.y > <number>this.game.config.height + enemy.displayHeight ||
+        enemy.y < - enemy.displayHeight * 2) {
+        if (enemy.onDestroy !== undefined) {
+          enemy.onDestroy();
+        }
+        enemy.destroy();
+      }
+    });
 
-    this.player.update();
+    for (var i = 0; i < this.enemyLasers.getChildren().length; i++) {
+      var laser = this.enemyLasers.getChildren()[i];
+      laser.update();
+      if (laser.x < -laser.displayWidth ||
+        laser.x > this.game.config.width + laser.displayWidth ||
+        laser.y < -laser.displayHeight * 4 ||
+        laser.y > this.game.config.height + laser.displayHeight) {
+        if (laser) {
+          laser.destroy();
+        }
+      }
+    }
+    for (var i = 0; i < this.playerLasers.getChildren().length; i++) {
+      var laser = this.playerLasers.getChildren()[i];
+      laser.update();
+      if (laser.x < -laser.displayWidth ||
+        laser.x > this.game.config.width + laser.displayWidth ||
+        laser.y < -laser.displayHeight * 4 ||
+        laser.y > this.game.config.height + laser.displayHeight) {
+        if (laser) {
+          laser.destroy();
+        }
+      }
+    }
+    if (!this.player.getData("isDead")) {
+      this.player.update();
 
-    if (this.keys.keyZ.isDown) {
-      this.player.moveUp();
-    }
-    else if (this.keys.keyS.isDown) {
-      this.player.moveDown();
-    }
-    if (this.keys.keyQ.isDown) {
-      this.player.moveLeft();
-    }
-    else if (this.keys.keyD.isDown) {
-      this.player.moveRight();
-    }
+      if (this.keys.keyZ.isDown) {
+        this.player.moveUp();
+      }
+      else if (this.keys.keyS.isDown) {
+        this.player.moveDown();
+      }
+      if (this.keys.keyQ.isDown) {
+        this.player.moveLeft();
+      }
+      else if (this.keys.keyD.isDown) {
+        this.player.moveRight();
+      }
 
-    if (this.keys.keySpace.isDown) {
-      this.player.setData("isShooting", true);
-    }
-    else {
-      this.player.setData("timerShootTick", this.player.getData("timerShootDelay") - 1);
-      this.player.setData("isShooting", false);
+      if (this.keys.keySpace.isDown) {
+        this.player.setData("isShooting", true);
+      }
+      else {
+        this.player.setData("timerShootTick", this.player.getData("timerShootDelay") - 1);
+        this.player.setData("isShooting", false);
+      }
     }
   }
 
@@ -177,5 +230,15 @@ export default class MainScene extends Phaser.Scene {
       }
     }
     return arr;
+  }
+
+  private onEnemyHitted(playerLaser, enemy) {
+    if (enemy) {
+      if (enemy.onDestroy !== undefined) {
+        enemy.onDestroy();
+      }
+      enemy.explode(true);
+      playerLaser.destroy();
+    }
   }
 }
