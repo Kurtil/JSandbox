@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <title>Event Target</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+</head>
+<body>
+    <div id="my_target">
+        <input type="button" value="clicke me" id="button1">
+        <input type="button" value="clicke me too" id="button2">
+    </div>
+</body>
+<script>
+    const el = document.getElementById("my_target");
+    el.addEventListener("click", event => {
+        debugger
+    })
+</script>
+</html>
