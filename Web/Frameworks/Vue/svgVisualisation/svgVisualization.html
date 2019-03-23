@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <title>SVG Visualization</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <script src="https://cdn.jsdelivr.net/npm/vue"></script>
+</head>
+
+<body>
+    <div id="app">
+        <svg xmlns="http://www.w3.org/2000/svg" width="200" height="200" id="chard">
+            <g v-for="(value, i) of data" :transform="`translate(0, ${i * lineSeparation})`" @click="onBarClick(i)"
+                style="cursor:pointer;">
+                <rect :width="barWidth(value)" height="30" :fill="`hsl(${hue(value)}, 100%, 50%)`"></rect>
+                <text y="20" x="5">{{value}}</text>
+            </g>
+        </svg>
+    </div>
+</body>
+<script>
+    const app = new Vue({
+        el: "#app",
+        data() {
+            return {
+                data: [1, 20, 4, 12, 1, 5],
+                rectConfig: {
+                    width: 200,
+                    height: 200,
+                    x: 10,
+                    y: 10,
+                },
+                lineSeparation: 35,
+            }
+        },
+        methods: {
+            barWidth(value) {
+                return 100 * value / this.maxValue;
+            },
+            onBarClick(clickedIndex) {
+                this.data = this.data.map((el, i) => i === clickedIndex ? ++el : el);
+            },
+            hue(value) {
+                return 50 + Math.round(310 * value / this.maxValue);
+            }
+        },
+        computed: {
+            maxValue() {
+                return Math.max(...this.data);
+            },
+        }
+    })
+</script>
+
+</html>
