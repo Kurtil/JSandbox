@@ -1,0 +1,1 @@
+Patterns from https://www.youtube.com/watch?v=7YZ5DwlLSt8&list=WL&index=7&t=0s

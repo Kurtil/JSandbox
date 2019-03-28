@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <title>Transparent wrapper</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <script src="https://cdn.jsdelivr.net/npm/vue"></script>
+</head>
+
+<body>
+    <div id="app">
+        <ul>
+            <my-component :list="list"></my-component>
+        </ul>
+    </div>
+</body>
+<script>
+    Vue.component('MyComponent', {
+        functional: true,
+        render(h, { props }) {
+            return  props.list.map(x => h('li', x));
+        }
+    });
+
+    const app = new Vue({
+        el: '#app',
+        data() {
+            return {
+                list: ['rrr', 'f4f', 'fff', 'fqqq6s6'],
+            }
+        },
+    });
+</script>
+
+</html>

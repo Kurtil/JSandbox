@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <title>Transparent wrapper</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <script src="https://cdn.jsdelivr.net/npm/vue"></script>
+</head>
+
+<body>
+    <div id="app">
+        <!-- native allow to listen to the root component instead of the component itself -->
+        <!-- <my-component @focus.native="onFocus" v-model="userInput" /> -->
+        <my-component @focus="onFocus" v-model="userInput" placeholder='text here' />
+    </div>
+</body>
+<script>
+    Vue.component('MyComponent', {
+        // by default, the root component inherite attributes...
+        inheritAttrs: false,
+        template:
+            `<label>
+                Input :&nbsp
+                <input :value='value' v-on="listeners" v-bind=$attrs style="padding-left: 0.5em">
+            </label>`,
+        props: {
+            value: String
+        },
+        data() {
+            return {
+            }
+        },
+        methods: {
+            onInput(event) {
+                this.$emit("input", event.target.value);
+            }
+        },
+        computed: {
+            listeners() {
+                return {
+                    ...this.$listeners,
+                    input: event => this.$emit('input', event.target.value),
+                }
+            }
+        }
+    });
+
+    const app = new Vue({
+        el: '#app',
+        data() {
+            return {
+                userInput: null
+            }
+        },
+        methods: {
+            onFocus() {
+                console.log('input component get focused');
+            },
+        },
+        watch: {
+            userInput() {
+                console.log(arguments, this.userInput);
+            }
+        }
+    });
+</script>
+
+</html>

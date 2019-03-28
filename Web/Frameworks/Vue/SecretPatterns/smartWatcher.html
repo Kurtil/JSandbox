@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <title>Smart Watcher</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <script src="https://cdn.jsdelivr.net/npm/vue"></script>
+</head>
+
+<body>
+    <div id="app">
+        <input type="text" v-model="userInput" placeholder="">
+        <ul>
+            <li v-for="data of filteredData">{{ data }}</li>
+        </ul>
+    </div>
+</body>
+<script>
+    const app = new Vue({
+        el: '#app',
+        data() {
+            return {
+                userInput: '',
+                filteredData: [],
+                data: [
+                    'jean',
+                    'jojo',
+                    'guigui',
+                    'oula',
+                    'ri',
+                    'f',
+                    'jg',
+                    'abcd',
+                    '1aaa',
+                    '2aaa',
+                    'bb109',
+                    'sdfsdf',
+                    'fffd',
+                    'ff',
+                    'af',
+                    'poooo',
+                    'gggg',
+                ],
+            }
+        },
+        methods: {
+            filterData() {
+                this.filteredData = this.data.filter(x => x.includes(this.userInput));
+            }
+        },
+        watch: {
+            // userInput()  { this.filterData(); }, // do not watch immediatly
+            userInput: {
+                handler: 'filterData',
+                immediate: true, // allow to watch when component is created
+            }
+        }
+    });
+</script>
+
+</html>
