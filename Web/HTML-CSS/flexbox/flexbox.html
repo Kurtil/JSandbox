@@ -1,50 +1,80 @@
 <style>
-    .flexbox {
+    .flex-container {
         background-color: coral;
-        width: 100%;
-        height: 100%;
+        /* width: 30vw; */
+        /* margin: 35vh 35vw; */
+        resize: horizontal;
+        overflow: hidden;
         display: flex;
-        flex-flow: row ;
-        justify-content: space-around;
+        flex-wrap: wrap;
+        /* flex-flow: row ; */
+        /* align-items: center; */
+        /* align-content: center; */
+        /* justify-content: space-around; */
         /* align-items: stretch; */
     }
 
-    .flexbox > * {
-        width: 6em;
-        height: 5em;
-        flex: 1 1;
+    .flex-container > * {
+        font-weight: bold;
+        --margin-size: 1px;
+        margin: var(--margin-size);
+        box-sizing: border-box;
+        /* width: calc(100% / 3 - 2 * var(--margin-size)); */
+        flex: 1 100%;
+
     }
 
-    .box1 {
+    .navbar {
         background-color: darkseagreen;
     }
 
-    .box2 {
+    .aside-left {
         background-color: cadetblue;
     }
 
-    .box3 {
-        background-color: lightskyblue;
-    }
-
-    .box4 {
-        background-color: bisque;
-    }
-
-    .box5 {
+    .aside-right {
         background-color: darkkhaki;
     }
 
-    .box6 {
+    .content1 {
+        background-color: lightskyblue;
+    }
+
+    .content2 {
+        background-color: bisque;
+    }
+
+    .footer {
         background-color: lightpink;
+    }
+
+    @media all and (min-width: 600px) {
+    /* We tell both sidebars to share a row */
+        .aside {
+            flex: 1 auto;
+        }
+    }
+
+    @media all and (min-width: 800px) {
+    /* We tell both sidebars to share a row */
+        .content {
+            order: 1;
+            flex: 2 0px;
+        }
+        .aside-right {
+            order: 2;
+        }
+        .footer {
+            order: 3
+        }
     }
 </style>
 
-<div class='flexbox'>
-    <div class="box1">BOX1</div>
-    <div class="box2">BOX2</div>
-    <div class="box3">BOX3</div>
-    <div class="box4">BOX4</div>
-    <div class="box5">BOX5</div>
-    <div class="box6">BOX6</div>
+<div class='flex-container'>
+    <div class="navbar">Navbar</div>
+    <div class="content content1">Content 1 : Lorem ipsum dolor sit amet consectetur adipisicing elit. Fugit ullam nulla eaque sunt omnis quam quas possimus, est sint. Possimus ducimus praesentium dicta? Esse ex numquam, porro vero quidem fugiat.</div>
+    <div class="content content2">Content 2 : Lorem ipsum dolor sit, amet consectetur adipisicing elit. Quisquam rem voluptatem illum itaque consequatur beatae illo incidunt quis dolore nesciunt nemo perferendis excepturi quae est eum mollitia recusandae, labore earum!</div>
+    <div class="aside aside-left">Aside Left</div>
+    <div class="aside aside-right">Aside 2</div>
+    <div class="footer">Footer</div>
 </div>
