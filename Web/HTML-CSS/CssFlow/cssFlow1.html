@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <title>Css Flow</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <style>
+        div {
+            min-width: 100px;
+            min-height: 30px;
+            margin: 1em;
+            background-color: burlywood;
+        }
+
+        .inlined {
+            display: inline;
+        }
+
+        #b1 {
+            margin: 1em;
+        }
+    </style>
+</head>
+<body>
+    <button id="b1">Inline</button>
+    <br/>
+    <textarea class="el">DIV 1</textarea>
+    <div  class="el" id="2"> DIV 2 </div>
+    <div  class="el" id="3"> DIV 3 </div>
+</body>
+<script>
+    let inlined = false;
+
+    const b1 = document.getElementById('b1');
+    b1.addEventListener('click', toggleClass);
+
+    function toggleClass() {
+        const divs = new Array(...document.getElementsByClassName("el"));
+        if (!inlined) {
+            divs.forEach(div => div.classList.add('inlined'));
+            b1.innerHTML = 'Click to block'
+        } else {
+            divs.forEach(div => div.classList.remove('inlined'));
+            b1.innerHTML = 'Click to inline'
+        }
+        inlined = !inlined;
+    }
+</script>
+</html>
