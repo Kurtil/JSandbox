@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <title>Vue Plugin Exploration 1</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <script src="https://unpkg.com/vue/dist/vue.js"></script>
+    <style>
+        body {
+            text-align: center;
+        }
+    </style>
+</head>
+
+<body>
+    <div id="app">
+        <input type="text" v-model="var1">
+        <br />
+        <br />
+        <button @click="var2++">+</button>
+        <button @click="var2--">-</button>
+        <br />
+        {{var2}}
+    </div>
+</body>
+<script>
+
+    const myPlugin = {
+        install(Vue) {
+            Vue.mixin({
+                created() {
+                    if (this.$options.rules) {
+                        Object.keys(this.$options.rules).forEach(rule => {
+                            if (!this.$options.rules[rule].hasOwnProperty('validate')
+                                || !this.$options.rules[rule].hasOwnProperty('message')) {
+                                throw 'A rule must have validate and message properties';
+                            }
+                            if (typeof this.$options.rules[rule].validate !== 'function') {
+                                throw 'Validate must be a function';
+                            }
+                            if (!this.$data.hasOwnProperty(rule)) {
+                                throw `There is no ${rule} property`;
+                            }
+                            // Test the validate function
+                            const { message, validate } = this.$options.rules[rule];
+                            this.$watch(rule, newValue => {
+                                if (!validate(newValue)) {
+                                    throw message;
+                                };
+                            });
+                        });
+                    }
+                }
+            })
+        }
+    }
+
+    Vue.use(myPlugin);
+
+    const app = new Vue({
+        el: '#app',
+        data: {
+            var1: 'coucou',
+            var2: 10,
+        },
+        rules: {
+            var1: {
+                validate: value => value === "coucou",
+                message: 'var1 must be "coucou"',
+            },
+            var2: {
+                validate: value => value > 5,
+                message: "var2 must be > 5",
+            }
+        }
+    });
+</script>
+
+</html>
