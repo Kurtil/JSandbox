@@ -1,31 +1,19 @@
-let ob = {
-    prop1: "coucou",
-    prop2: true,
-    prop3: null,
-    prop4: 4,
-};
-
-const convert = ob => {
-    Object.keys(ob).forEach(key => {
-        let keyValue = ob[key];
-        Object.defineProperty(ob, key, {
-            get() {
-                console.log(`get access to ${key}`);
-                return keyValue;
-            },
-            set(newValue) {
-                console.log(`set access to ${key}, old value : ${keyValue}, new value : ${newValue}`);
-                keyValue = newValue;
-            }
-        });
-    })
+const state = {
+    price: 10,
+    quantity: 3
 }
 
-convert(ob);
+Object.defineProperty(state, 'total', {
+    get() {
+        return this.price * this.quantity;
+    },
+    set() {
+        throw 'Cannot set total';
+    }
+});
 
-const a = ob.prop1;
-console.log(`a = ${a}`);
+console.log(state.total);
 
-ob.prop3 = 33;
+state.price = 12;
 
-console.log(`ob.prop3 = ${ob.prop3}`);
+console.log(state.total);
