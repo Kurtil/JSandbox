@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <title>Vue Plugin Exploration 1</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <script src="https://unpkg.com/vue/dist/vue.js"></script>
+    <style>
+        body {
+            text-align: center;
+        }
+    </style>
+</head>
+
+<body>
+    <div id="app">
+        <smart-avatar username='vuejs'></smart-avatar>
+    </div>
+</body>
+<script>
+
+    function fetchURL(username, cb) {
+        setTimeout(() => {
+            cb('https://avatars3.githubusercontent.com/u/6128107?v=4&s=200');
+        }, 500);
+    }
+
+    const Avatar = {
+        name: 'Avatar',
+        props: ['src'],
+        template: '<img :src=src />',
+    }
+
+    function withAvatarURL(InnerComponent) {
+        return {
+            props: ['username'],
+            data() {
+                return {
+                    src: null,
+                    placeholder: 'Vue logo'
+                }
+            },
+            created() {
+                fetchURL(this.username, this.reRender);
+            },
+            methods: {
+                reRender(url) {
+                    this.src = url;
+                }
+            },
+            render(h) {
+                return h('div', [this.src ? h(Avatar, {props: { src: this.src }}) : 'no image yet']);
+            }
+        }
+    }
+
+    const SmartAvatar = withAvatarURL(Avatar);
+
+    const app = new Vue({
+        el: '#app',
+        components: { SmartAvatar }
+    });
+</script>
+
+</html>

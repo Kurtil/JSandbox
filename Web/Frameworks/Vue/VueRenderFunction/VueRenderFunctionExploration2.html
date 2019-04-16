@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <title>Vue Plugin Exploration 1</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <script src="https://unpkg.com/vue/dist/vue.js"></script>
+    <style>
+        body {
+            text-align: center;
+        }
+    </style>
+</head>
+
+<body>
+    <div id="app">
+        <krtl-array :tags="['h1', 'h2', 'h3']"></krtl-array>
+    </div>
+</body>
+<script>
+
+    Vue.component('krtlArray', {
+        props: {
+            tags: Array
+        },
+        render(h) {
+            return h('div', this.tags.map((tag, i) => h(tag, i)));
+            // the template equivalent would use the <component is="h1" ...
+        }
+    });
+
+    const app = new Vue({
+        el: '#app',
+    });
+</script>
+
+</html>

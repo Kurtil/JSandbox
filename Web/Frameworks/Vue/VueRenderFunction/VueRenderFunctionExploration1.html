@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <title>Vue Plugin Exploration 1</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <script src="https://unpkg.com/vue/dist/vue.js"></script>
+    <style>
+        body {
+            text-align: center;
+        }
+    </style>
+</head>
+
+<body>
+    <div id="app">
+        <krtl-simple-div></krtl-simple-div>
+        <krtl-classed-div></krtl-classed-div>
+        <krtl-tree></krtl-tree>
+    </div>
+</body>
+<script>
+
+    const SimpleDivComponent = Vue.component('krtlSimpleDiv', {
+        render(h) {
+            return h('div', 'coucou');
+        }
+    });
+
+    Vue.component('krtlClassedDiv', {
+        render(h) {
+            return h('div', { class: 'foo bar' }, 'jean');
+        }
+    });
+
+    Vue.component('krtlTree', {
+        render(h) {
+            return h('div', [
+                'jacky',
+                h('span', { style: {backgroundColor: 'red'} }, 'dd'),
+                'xxx',
+                h(SimpleDivComponent, { style: { color: 'red'}}), // h can also accept a component
+                // In that case, we no longer have to register it with the components property
+            ]);
+        }
+    });
+
+    const app = new Vue({
+        el: '#app',
+    });
+</script>
+
+</html>

@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <title>Vue Plugin Exploration 1</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <script src="https://unpkg.com/vue/dist/vue.js"></script>
+    <style>
+        body {
+            text-align: center;
+        }
+    </style>
+</head>
+
+<body>
+    <div id="app">
+        <krtl-switch :ok="ok"></krtl-switch>
+        <krtl-switch-functionnal :ok="ok"></krtl-switch-functionnal>
+        <button @click="ok = !ok"> {{ ok ? 'OK' : 'KO' }}</button>
+    </div>
+</body>
+<script>
+
+    const FooComponent = Vue.component('krtlFoo', {
+        render(h) {
+            return h('div', 'foo');
+        }
+    });
+
+    const BarComponent = Vue.component('krtlBar', {
+        render(h) {
+            return h('div', 'bar');
+        }
+    });
+
+    Vue.component('krtlSwitch', {
+        props: {
+            ok: Boolean
+        },
+        render(h) {
+            return h(this.ok ? FooComponent : BarComponent, 'functionnal');
+        }
+    });
+
+    // Functionnal component are 'just' like function that return shadow dom
+    Vue.component('krtlSwitchFunctionnal', {
+        functional: true,
+        render(h, { props: { ok } }) {
+            return h(ok ? FooComponent : BarComponent);
+        }
+    });
+
+    const app = new Vue({
+        el: '#app',
+        data: {
+            ok: true
+        }
+    });
+</script>
+
+</html>
