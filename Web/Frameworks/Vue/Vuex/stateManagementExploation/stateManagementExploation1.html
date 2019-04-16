@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <title>Vue State Management</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <script src="https://unpkg.com/vue/dist/vue.js"></script>
+    <style>
+        body {
+            text-align: center;
+        }
+    </style>
+</head>
+
+<body>
+    <div id="app">
+        <krtl-counter></krtl-counter>
+        <krtl-counter></krtl-counter>
+        <krtl-counter></krtl-counter>
+        <button @click="increment">Increment</button>
+    </div>
+</body>
+<script>
+
+    const state = {
+        count: 0,
+    };
+
+    Vue.component('krtlCounter', {
+        data() {
+            return state;
+        },
+        render(h) {
+            return h('div', this.count);
+        }
+    });
+
+    const app = new Vue({
+        el: '#app',
+        data: state,
+        methods: {
+            increment() {
+                this.count ++;
+            }
+        }
+    });
+</script>
+
+</html>
