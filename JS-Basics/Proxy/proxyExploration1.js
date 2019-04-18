@@ -22,3 +22,7 @@ console.log(proxy.name);
 console.log(proxy.age);
 console.log(proxy.hobbies);
 console.log(proxy.unknownProp); // This one is interesting ;)
+
+obj.unknownProp = "coucou";
+
+console.log(proxy.unknownProp); // also, proxy are not settled at creation time !
