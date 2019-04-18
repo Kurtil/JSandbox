@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <title>Vuex Exploration 3</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <script src="https://unpkg.com/vue/dist/vue.js"></script>
+    <script src="https://unpkg.com/vuex@3.1.0/dist/vuex.js"></script>
+    <style>
+        body {
+            text-align: center;
+        }
+
+        ul {
+            list-style: none;
+        }
+    </style>
+</head>
+
+<body>
+    <div id="app">
+        <krtl-todo-list></krtl-todo-list>
+    </div>
+</body>
+<script>
+
+    // Vue.use(Vuex); // it dont seems mandatory...
+
+    const store = new Vuex.Store({
+        state: {
+            todos: [
+                { id: 1, done: true, task: 'read books' },
+                { id: 2, done: false, task: 'walk outside' },
+                { id: 3, done: false, task: 'go gym' },
+                { id: 4, done: true, task: 'eat healthy' },
+                { id: 5, done: false, task: 'meditate' },
+            ]
+        },
+        getters: {
+            doneTodos: state => state.todos.filter(todo => todo.done),
+            doneTodosLength: (state, getters) => getters.doneTodos.length,
+            notDoneTodos: state => state.todos.filter(todo => !todo.done),
+            notDoneTodosLength: (state, getters) => getters.notDoneTodos.length,
+            todosLength: state => state.todos.length,
+            getTodoById: state => id => state.todos.find(todo => todo.id === id),
+        }
+    });
+
+    const mapGetters = Vuex.mapGetters;
+
+    Vue.component('KrtlTodoList', {
+        data() {
+            return {
+                selectedTodoId: 1,
+                selectedTodo: null,
+            }
+        },
+        template: `
+        <div>
+            <h3>Done todos : {{ doneL }} / {{ L }} </h3>
+            <ul>
+                <li v-for='doneTodo of doneTodos'>{{doneTodo.task}}</li>
+            </ul>
+            <h3>Not Done todos : {{ notL }} / {{ L }} </h3>
+            <ul>
+                <li v-for='notDoneTodo of notDoneTodos'>{{notDoneTodo.task}}</li>
+            </ul>
+            <h3>Select Todo :</h3>
+            <input type="number" v-model="selectedTodoId">
+            <br />
+            <span> {{ selectedTodo }} </span>
+        </div>`,
+        computed: {
+            ...mapGetters([
+                'doneTodos',
+                'notDoneTodos',
+                'doneTodosLength',
+            ]),
+            ...mapGetters({
+                L: "todosLength",
+                notL: 'notDoneTodosLength',
+                doneL: 'todosLength',
+            })
+        },
+        methods: {
+            getSelectedTodo() {
+                this.selectedTodo = this.$store.getters.getTodoById(+this.selectedTodoId);
+            }
+        },
+        watch: {
+            selectedTodoId: {
+                handler: 'getSelectedTodo',
+                immediate: true,
+            }
+        }
+    });
+
+    const app = new Vue({
+        el: '#app',
+        store,
+    });
+
+</script>
+
+</html>

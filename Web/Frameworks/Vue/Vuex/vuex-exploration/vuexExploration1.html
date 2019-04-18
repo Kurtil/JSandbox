@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <title>Vuex Exploration 1</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <script src="https://unpkg.com/vue/dist/vue.js"></script>
+    <script src="https://unpkg.com/vuex@3.1.0/dist/vuex.js"></script>
+    <style>
+        body {
+            text-align: center;
+        }
+    </style>
+</head>
+
+<body>
+    <div id="app">
+        <krtl-counter amount='1'></krtl-counter>
+        <krtl-counter amount='10'></krtl-counter>
+        <br />
+        custom :
+        <input type='number' v-model='amount'>
+        <krtl-counter :amount='amount'></krtl-counter>
+
+    </div>
+</body>
+<script>
+
+    // Vue.use(Vuex); // it dont seems mandatory...
+
+    const store = new Vuex.Store({
+        state: {
+            count: 0,
+        },
+        mutations: {
+            increment(state, payload = 1) {
+                state.count += +payload;
+            },
+            decrement(state, payload = 1) {
+                state.count -= payload;
+            }
+        }
+    });
+
+    Vue.component('KrtlCounter', {
+        props: ['amount'],
+        template: `
+        <div>
+            Counter {{ this.amount}}x : {{ $store.state.count }}
+            <button @click="$store.commit('increment', amount)">+</button>
+            <button @click="$store.commit('decrement', amount)">-</button>
+        </div>`
+    });
+
+    const app = new Vue({
+        el: '#app',
+        store,
+        data: {
+            amount: 1,
+        },
+    });
+
+</script>
+
+</html>

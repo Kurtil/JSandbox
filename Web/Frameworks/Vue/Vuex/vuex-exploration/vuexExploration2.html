@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <title>Vuex Exploration 2</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <script src="https://unpkg.com/vue/dist/vue.js"></script>
+    <script src="https://unpkg.com/vuex@3.1.0/dist/vuex.js"></script>
+    <style>
+        body {
+            text-align: center;
+        }
+    </style>
+</head>
+
+<body>
+    <div id="app">
+        <krtl-state-viewer></krtl-state-viewer>
+    </div>
+</body>
+<script>
+
+    // Vue.use(Vuex); // it dont seems mandatory...
+
+    const store = new Vuex.Store({
+        state: {
+            prop1: 'coucou',
+            prop2: true,
+            prop3: 4,
+            prop4: 'jean jean',
+            prop5: 'jean jacques',
+        },
+    });
+
+    const mapState = Vuex.mapState;
+
+    Vue.component('KrtlStateViewer', {
+        props: ['amount'],
+        template: `
+        <div>
+            <span>Prop1 : {{ prop1 }}</span><br />
+            <span>Prop2 : {{ prop2 }}</span><br />
+            <span>Prop3 : {{ prop3Alias }}</span><br />
+            <span>Prop4 : {{ prop4 }}</span><br />
+            <span>Prop5 : {{ prop5 }}</span><br />
+        </div>`,
+        computed: {
+            prop1() {
+                return this.$store.state.prop1;
+            }, // can be simplified by ->
+            ...mapState({
+                prop2: state => state.prop2,
+                prop3Alias: 'prop3',
+            }),
+            ...mapState(['prop4', 'prop5']),
+        }
+    });
+
+    const app = new Vue({
+        el: '#app',
+        store,
+        data: {
+            amount: 1,
+        },
+    });
+
+</script>
+
+</html>
