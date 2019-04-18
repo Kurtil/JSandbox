@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <title>Vue i18n plugin</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <script src="https://unpkg.com/vue/dist/vue.js"></script>
+    <style>
+        body {
+            text-align: center;
+        }
+    </style>
+</head>
+
+<body>
+    <div id="app">
+        <h1>{{ $t('welcome-message') }}</h1>
+        <button @click="lang = 'en'">English</button>
+        <button @click="lang = 'fr'">Bonjour</button>
+        <button @click="lang = 'es'">Spanish</button>
+    </div>
+</body>
+<script>
+
+    const i18nPlugin = {
+        install(Vue, locales) {
+            Vue.prototype.$t = function(id) {
+                 return locales[this.$root.lang][id];
+            }
+        }
+    }
+
+    Vue.use(i18nPlugin, /* option */ {
+        en: { 'welcome-message': 'hello' },
+        fr: { 'welcome-message': 'bonjour' },
+        es: { 'welcome-message': 'ola' },
+    });
+
+    const app = new Vue({
+        el: '#app',
+        data: {
+            lang: 'fr',
+        },
+    });
+</script>
+
+</html>
