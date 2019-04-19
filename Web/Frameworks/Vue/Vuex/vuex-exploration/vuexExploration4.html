@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <title>Vuex Exploration 4</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <script src="https://unpkg.com/vue/dist/vue.js"></script>
+    <script src="https://unpkg.com/vuex@3.1.0/dist/vuex.js"></script>
+    <style>
+        body {
+            text-align: center;
+        }
+
+        ul {
+            list-style: none;
+        }
+
+        .loader {
+            display: inline-block;
+            animation: spin 0.5s linear infinite;
+        }
+
+        @keyframes spin {
+            from {
+                transform: rotate(0deg);
+            }
+
+            to {
+                transform: rotate(359deg);
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <div id="app">
+        <krtl-todo-list></krtl-todo-list>
+    </div>
+</body>
+<script>
+    const CHANGE_MESSAGE = 'CHANGE_MESSAGE';
+    const CHANGE_LOADING = 'CHANGE_LOADING';
+    const IS_LOADING = 'IS_LOADING';
+    const MESSAGE = 'MESSAGE';
+
+    const store = new Vuex.Store({
+        state: {
+            message: null,
+            loading: false,
+        },
+        mutations: {
+            [CHANGE_MESSAGE](state, { message }) {
+                state.message = message;
+            },
+            [CHANGE_LOADING](state, { value }) {
+                state.loading = value;
+            }
+        },
+        getters: {
+            [IS_LOADING](state) {
+                return state.loading;
+            },
+            [MESSAGE](state) {
+                return state.message;
+            }
+        },
+        actions: {
+            [CHANGE_MESSAGE](context, payload) {
+                context.commit(CHANGE_LOADING, { value: true });
+                setTimeout(() => {
+                    context.commit(CHANGE_LOADING, { value: false });
+                    context.commit(CHANGE_MESSAGE, { message: payload.message });
+                }, 1000)
+            }
+        }
+    });
+
+    const mapMutations = Vuex.mapMutations;
+    const mapGetters = Vuex.mapGetters;
+
+    Vue.component('KrtlTodoList', {
+        data() {
+            return {
+            }
+        },
+        template: `
+            <div>
+                <div> The message is :
+                        <span  v-if='IS_LOADING' class='loader'>x</span>
+                        <span v-else>{{ message }}</span>
+                </div>
+                <br />
+                <input v-model='message' :disabled='IS_LOADING' placeholder="async input" />
+            </div>
+        `,
+        computed: {
+            ...mapMutations([
+                CHANGE_MESSAGE,
+                CHANGE_LOADING,
+            ]),
+            ...mapGetters([
+                IS_LOADING,
+            ]),
+            message: {
+                get() {
+                    return this.$store.getters[MESSAGE];
+                },
+                set(value) {
+                    this.$store.dispatch(CHANGE_MESSAGE, { message: value });
+                }
+            },
+        }
+    });
+
+    const app = new Vue({
+        el: '#app',
+        store,
+    });
+
+</script>
+
+</html>
