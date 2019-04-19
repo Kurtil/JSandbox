@@ -35,11 +35,11 @@
             count: 0,
         },
         mutations: {
-            increment(state, payload = 1) {
-                state.count += +payload;
+            increment(state, { amount = 1 }) {
+                state.count += +amount;
             },
-            decrement(state, payload = 1) {
-                state.count -= payload;
+            decrement(state, { amount = 1 }) {
+                state.count -= amount;
             }
         }
     });
@@ -49,8 +49,8 @@
         template: `
         <div>
             Counter {{ this.amount}}x : {{ $store.state.count }}
-            <button @click="$store.commit('increment', amount)">+</button>
-            <button @click="$store.commit('decrement', amount)">-</button>
+            <button @click="$store.commit('increment', { amount })">+</button>
+            <button @click="$store.commit({ type: 'decrement', amount })">-</button>
         </div>`
     });
 
