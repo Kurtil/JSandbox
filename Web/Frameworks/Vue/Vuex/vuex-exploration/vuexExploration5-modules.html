@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <title>Vuex Exploration 5 - modules</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <script src="https://unpkg.com/vue/dist/vue.js"></script>
+    <script src="https://unpkg.com/vuex@3.1.0/dist/vuex.js"></script>
+    <style>
+        body {
+            text-align: center;
+        }
+
+        ul {
+            list-style: none;
+        }
+    </style>
+</head>
+
+<body>
+    <div id="app">
+        <krtl-todo-list></krtl-todo-list>
+    </div>
+</body>
+<script>
+
+    const moduleA = {
+        state: { countA: 0 },
+        mutations: {
+            incrementA: state => state.countA++,
+            decrementA: state => state.countA--,
+        },
+        getters: {
+            countA: state => state.countA
+        }
+    }
+
+    const moduleB = {
+        state: { countB: 0 },
+        mutations: {
+            incrementB: state => state.countB++,
+            decrementB: state => state.countB--,
+        },
+        getters: {
+            countB: state => state.countB
+        }
+    }
+
+    const moduleC = {
+        namespaced: true,
+        state: { countC: 0 },
+        mutations: {
+            incrementC: state => state.countC++,
+            decrementC: state => state.countC--,
+        },
+        getters: {
+            countC: state => state.countC
+        }
+    }
+
+    const store = new Vuex.Store({
+        modules: {
+            a: moduleA,
+            b: moduleB,
+            c: moduleC,
+        }
+    });
+
+    const mapMutations = Vuex.mapMutations;
+    const mapGetters = Vuex.mapGetters;
+
+    Vue.component('KrtlTodoList', {
+        template: `
+        <div>
+            <span>Count A : {{$store.getters.countA}}</span>
+            <button @click="$store.commit('incrementA')">+</button>
+            <button @click="$store.commit('decrementA')">-</button>
+            <span>Count B : {{$store.getters.countB}}</span>
+            <button @click="$store.commit('incrementB')">+</button>
+            <button @click="$store.commit('decrementB')">-</button>
+            <span>Count C  (namespaced) : {{$store.getters['c/countC']}}</span>
+            <button @click="$store.commit('c/incrementC')">+</button>
+            <button @click="$store.commit('c/decrementC')">-</button>
+        </div>`
+    });
+
+    const app = new Vue({
+        el: '#app',
+        store,
+    });
+
+</script>
+
+</html>
