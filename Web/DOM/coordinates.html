@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Coordinate</title>
+    <style>
+        body {
+            box-sizing: border-box;
+            margin: 0px;
+            height: 100vh;
+            text-align: center;
+            background-color: coral;
+            position: relative;
+            width: 50vw;
+            margin: auto;
+        }
+
+        #content {
+            background-color: blueviolet;
+        }
+
+        #p {
+            background-color: lightgray;
+            position: absolute;
+        }
+
+    </style>
+</head>
+<body>
+    <div id="content">Lorem ipsum dolor sit amet consectetur, adipisicing elit. Delectus eos non expedita, quod natus a voluptatem sequi itaque laborum atque voluptatibus aut quisquam, ea id iste dolore beatae, quis recusandae.</div>
+    <div id="p">POSITIONNED</div>
+    <script>
+        const el = document.getElementById('p');
+        const positions = document.getElementById('content').getBoundingClientRect();
+        el.style.top = positions.top
+        el.style.left = 1000;
+    </script>
+</body>
+</html>
