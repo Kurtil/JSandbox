@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>WebComponents1</title>
+</head>
+
+<body>
+    <button onclick="toggleComponent()">CLICK</button>
+        <my-component message='coucou'>
+        </my-component>
+    <script>
+
+        class MyComponent extends HTMLElement {
+            constructor() {
+                super();
+                const shadowRoot = this.attachShadow({ mode: 'open' });
+
+                const message = this.hasAttribute('message') ? this.getAttribute('message') : 'XXX';
+                const span = document.createElement('span');
+                span.innerHTML = message;
+
+                shadowRoot.appendChild(span);
+                this.style.backgroundColor = 'coral'
+            }
+
+            connectedCallback() {
+                console.log("I'm in");
+            }
+
+        }
+
+        customElements.define('my-component', MyComponent);
+    </script>
+    <script>
+        const myComponent = document.querySelector('my-component');
+
+        function toggleComponent() {
+            if ([...document.body.children].find(child => child === myComponent)) {
+                document.body.removeChild(myComponent);
+            } else {
+                document.body.appendChild(myComponent)
+            }
+        }
+    </script>
+</body>
+
+</html>

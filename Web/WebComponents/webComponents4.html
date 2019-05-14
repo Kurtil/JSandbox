@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>WebComponents3</title>
+</head>
+
+<body>
+    <input type="text" oninput="inputValueChange(event)">
+    <ul>
+        <li>coucou</li>
+        <li>jean</li>
+        <li id="cmp" is="my-component" message='coucou'></li>
+    </ul>
+    <script>
+        function inputValueChange(event) {
+            const cmp = document.getElementById('cmp');
+            cmp.setAttribute('message', event.target.value);
+        }
+
+        class MyComponent extends HTMLLIElement {
+            constructor() {
+                super();
+
+                this.innerText = this.hasAttribute('message') ? this.getAttribute('message') : 'no message specified';
+            }
+
+            // to observe message change
+            static get observedAttributes() { return ['message']; }
+
+            attributeChangedCallback(name, oldValue, newValue) {
+                if (name != 'message') throw `${name} is not an argument watched for change`;
+                console.log(`old value : ${oldValue} , new value : ${newValue}`);
+                this.innerText = newValue;
+            }
+
+            connectedCallback() {
+                console.log("I'm in");
+            }
+
+            disconnectedCallback() {
+                console.log("I'm out");
+            }
+
+        }
+
+        customElements.define('my-component', MyComponent, { extends: "li" });
+    </script>
+</body>
+
+</html>
