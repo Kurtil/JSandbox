@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>WebComponents7 Template and Slot</title>
+</head>
+
+<body>
+    <my-component><p>Coucou</p><span slot='footer'>G</span><p>Bye</p><div slot=header>Jean jean</div></my-component>
+    <template id="my-template">
+        <style>
+            p {
+                color: white;
+                background-color: #666;
+                padding: 5px;
+            }
+
+            input {
+                /* display: block; */
+                width: 100%;
+            }
+        </style>
+        <slot name=header>Default header</slot>
+        <slot name=sub-header>Default sub header</slot>
+        <div>
+            <p>
+                <slot></slot>
+            </p>
+            <input type="text">
+            <slot name=footer></slot>
+        </div>
+    </template>
+    <script>
+
+        class MyComponent extends HTMLElement {
+            constructor() {
+                super();
+
+                const template = document.getElementById('my-template');
+                this.attachShadow({ mode: "open" })
+                    .appendChild(template.content.cloneNode(true));
+            }
+        }
+
+        customElements.define('my-component', MyComponent);
+    </script>
+</body>
+
+</html>

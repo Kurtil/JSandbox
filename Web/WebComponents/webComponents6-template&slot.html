@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>WebComponents6 Template and Slot</title>
+</head>
+
+<body>
+    <my-component></my-component>
+    <script>
+
+        class MyComponent extends HTMLElement {
+            constructor() {
+                super();
+                const template = document.createElement('template');
+                template.innerHTML = `
+                        <style>
+                            p {
+                                color: white;
+                                background-color: #666;
+                                padding: 5px;
+                            }
+
+                            input {
+                                /* display: block; */
+                                width: 100%;
+                            }
+                        </style>
+                        <div>
+                            <p>
+                                Coucou
+                            </p>
+                            <input type="text">
+                        </div>
+                    `;
+
+                this.attachShadow({ mode: "open" }).appendChild(template.content);
+            }
+        }
+
+        customElements.define('my-component', MyComponent);
+    </script>
+</body>
+
+</html>
