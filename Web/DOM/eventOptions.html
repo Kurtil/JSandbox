@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Event Options</title>
+</head>
+
+<body>
+    <div id="first">
+        <div id="second">
+            <button id="button">Click Me !</button>
+        </div>
+    </div>
+    <script>
+        const button = document.getElementById('button');
+        button.addEventListener('click', event => {
+            console.log("in button");
+        });
+        window.addEventListener('click', event => {
+            debugger
+            console.log("in window");
+        });
+    </script>
+</body>
+
+</html>
