@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title>Shared memory</title>
+</head>
+<body>
+  <button onclick="onPlusClick()">+</button>
+  <button onclick="onMinusClick()">-</button>
+  <button onclick="onLogClick()">Log</button>
+  <script>
+    const worker = new Worker('worker.js');
+
+    const buff = new SharedArrayBuffer(1)
+    const arr = new Int8Array(buff);
+    arr.set([9]);
+    worker.postMessage({type: 'init', payload: arr});
+    const onPlusClick = () => worker.postMessage({type: 'increment'})
+    const onMinusClick = () => worker.postMessage({type: 'decrement'})
+    const onLogClick = () => console.log(`Array value is : ${arr[0]}`)
+  </script>
+</body>
+</html>
