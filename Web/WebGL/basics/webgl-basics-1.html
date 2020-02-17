@@ -5,6 +5,7 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>WEBGL Basics 1</title>
+  <script src="./gl-matrix-min.js"></script>
   <style>
     canvas {
       display: block;
@@ -21,13 +22,16 @@
   <script id="vertexShader" type="x-shader/x-vertex">
     precision mediump float;
 
-    attribute vec2 vertPosition;
+    attribute vec3 vertPosition;
     attribute vec3 vertColor;
     varying vec3 fragColor;
+    uniform mat4 mWorld;
+    uniform mat4 mView;
+    uniform mat4 mProj;
 
     void main() {
       fragColor = vertColor;
-      gl_Position = vec4(vertPosition, 0.0, 1.0);
+      gl_Position = mProj* mView * mWorld * vec4(vertPosition, 1.0);
     }
   </script>
   <script id="fragmentShader" type="x-shader/x-fragment">
@@ -83,9 +87,9 @@
 
     const bufferData = new Float32Array([
       // X, Y    R, G, B
-      -.5, .5, 1, 0, 0,
-      0, -.5, 0, 1, 0,
-      +.5, .5, 0, 0, 1
+      -.5, .5, 0, 1, 0, 0,
+      0, -.5, 0, 0, 1, 0,
+      +.5, .5, 0, 0, 0, 1
     ]);
 
     const buffer = gl.createBuffer();
@@ -95,15 +99,31 @@
     const positionAttributeLocation = gl.getAttribLocation(program, "vertPosition");
     const colorAttributeLocation = gl.getAttribLocation(program, "vertColor");
 
-    gl.vertexAttribPointer(positionAttributeLocation, 2, gl.FLOAT, gl.FALSE, 5 * Float32Array.BYTES_PER_ELEMENT, 0);
-    gl.vertexAttribPointer(colorAttributeLocation, 3, gl.FLOAT, gl.FALSE, 5 * Float32Array.BYTES_PER_ELEMENT, 2 * Float32Array.BYTES_PER_ELEMENT);
+    gl.vertexAttribPointer(positionAttributeLocation, 3, gl.FLOAT, gl.FALSE, 6 * Float32Array.BYTES_PER_ELEMENT, 0);
+    gl.vertexAttribPointer(colorAttributeLocation, 3, gl.FLOAT, gl.FALSE, 6 * Float32Array.BYTES_PER_ELEMENT, 3 * Float32Array.BYTES_PER_ELEMENT);
 
     gl.enableVertexAttribArray(positionAttributeLocation);
     gl.enableVertexAttribArray(colorAttributeLocation);
 
+    gl.useProgram(program);
+
+    const matWorldUniformLocation = gl.getUniformLocation(program, "mWorld");
+    const matViewUniformLocation = gl.getUniformLocation(program, "mView");
+    const matProjUniformLocation = gl.getUniformLocation(program, "mProj");
+
+    const worldMatrix = new Float32Array(16);
+    const viewMatrix = new Float32Array(16);
+    const projMatrix = new Float32Array(16);
+    glMatrix.mat4.identity(worldMatrix);
+    glMatrix.mat4.identity(viewMatrix);
+    glMatrix.mat4.identity(projMatrix);
+
+    gl.uniformMatrix4fv(matWorldUniformLocation, gl.FALSE, worldMatrix);
+    gl.uniformMatrix4fv(matViewUniformLocation, gl.FALSE, viewMatrix);
+    gl.uniformMatrix4fv(matProjUniformLocation, gl.FALSE, projMatrix);
+
     // Main render loop
 
-    gl.useProgram(program);
     gl.drawArrays(gl.TRIANGLES, 0, 3);
 
   </script>
