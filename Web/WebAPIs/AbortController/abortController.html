@@ -1,0 +1,17 @@
+<script>
+  const controller = new AbortController();
+  const signal = controller.signal;
+
+  const githubLogo = fetch("https://github.githubassets.com/images/modules/logos_page/GitHub-Mark.png", { signal })
+    .then(res => {
+      res.json().then(res => {
+        console.log(`fetched complete ${res}`);
+      });
+    }).catch(err => {
+      if (err.name === "AbortError") {
+        console.log("Fetched cancel");
+      }
+    });
+
+  controller.abort();
+</script>
